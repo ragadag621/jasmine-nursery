@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+/*
+  Design tokens for משתלת אליאסמין | مشتل الياسمين.
+  Single source of truth shared by the public site and the admin dashboard.
+  Palette: deep forest green (primary), sage (secondary), warm off-white
+  (background), terracotta (accent/CTA) — "premium botanical", not a
+  generic SaaS-green template.
+
+  Typography: a display serif for headings (editorial/botanical feel) +
+  a clean sans for body copy. Both are placeholders here — actual font
+  files/imports (with Hebrew + Arabic glyph coverage) will be wired in
+  during the design/build phase via the frontend-design skill.
+*/
+@theme {
+  /* Color palette */
+  --color-forest-950: #0e1f16;
+  --color-forest-900: #16321f;
+  --color-forest-800: #204a2b;
+  --color-forest-700: #2c6238;
+  --color-forest-600: #397c46;
+  --color-forest-500: #4c9a5a;
+
+  --color-sage-400: #9db98f;
+  --color-sage-300: #b9cead;
+  --color-sage-200: #d6e3cd;
+  --color-sage-100: #ecf2e7;
+
+  --color-cream-100: #fbf9f4;
+  --color-cream-50: #ffffff;
+
+  --color-terracotta-600: #b5603f;
+  --color-terracotta-500: #c9754f;
+  --color-terracotta-400: #dd9776;
+
+  --color-ink-900: #1c1c1a;
+  --color-ink-600: #565650;
+
+  /* Typography */
+  --font-display: 'Fraunces', 'Frank Ruhl Libre', 'Noto Serif Hebrew', serif;
+  --font-body: 'Inter', 'Noto Sans Hebrew', 'Noto Sans Arabic', sans-serif;
+
+  /* Motion */
+  --ease-botanical: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  background-color: var(--color-cream-100);
+  color: var(--color-ink-900);
+}
+
+/* RTL is the default reading direction for this app (Hebrew/Arabic);
+   dir is set dynamically at the app root in App.tsx per active locale. */
+body {
+  direction: rtl;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+}
+
+/* Reduced motion respect — required for the animation-heavy design direction */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
