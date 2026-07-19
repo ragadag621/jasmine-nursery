@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import multer from 'multer';
 import { ApiError } from '../utils/ApiError';
 import { env } from '../config/env';
 
@@ -20,6 +21,14 @@ export function errorHandler(
     statusCode = err.statusCode;
     message = err.message;
     errors = err.errors;
+  } else if (err instanceof multer.MulterError) {
+    statusCode = 400;
+    message =
+      err.code === 'LIMIT_FILE_SIZE'
+        ? 'Image file is too large (max 5MB)'
+        : err.code === 'LIMIT_FILE_COUNT' || err.code === 'LIMIT_UNEXPECTED_FILE'
+          ? 'Too many images in this upload'
+          : `Upload error: ${err.message}`;
   } else if (err instanceof Error) {
     message = err.message;
   }

@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 
 /**
  * Bilingual text field used throughout the app (Hebrew + Arabic), per the
@@ -60,13 +60,11 @@ export const imageRefSchema = new Schema<ImageRef>(
  */
 export interface OrderedImageRef extends ImageRef {
   order: number;
+  _id?: Types.ObjectId;
 }
 
-export const orderedImageRefSchema = new Schema<OrderedImageRef>(
-  {
-    url: { type: String, required: true },
-    publicId: { type: String, required: true },
-    order: { type: Number, required: true, default: 0 },
-  },
-  { _id: false }
-);
+export const orderedImageRefSchema = new Schema<OrderedImageRef>({
+  url: { type: String, required: true },
+  publicId: { type: String, required: true },
+  order: { type: Number, required: true, default: 0 },
+});

@@ -1,0 +1,10 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#ecf2e7"/>
+  <g opacity="0.5">
+    <path d="M200 900 C 250 650, 150 500, 250 300 C 320 450, 400 500, 350 700 C 320 800, 260 870, 200 900 Z" fill="#9db98f"/>
+    <path d="M1400 900 C 1350 650, 1450 500, 1350 280 C 1280 450, 1200 500, 1260 700 C 1300 800, 1350 870, 1400 900 Z" fill="#b9cead"/>
+    <path d="M800 900 C 850 600, 700 450, 800 200 C 900 450, 1000 500, 900 750 C 870 830, 830 880, 800 900 Z" fill="#204a2b" opacity="0.35"/>
+  </g>
+  <text x="800" y="460" font-family="serif" font-size="46" fill="#16321f" text-anchor="middle" opacity="0.55">Development Placeholder — Hero Image</text>
+  <text x="800" y="510" font-family="sans-serif" font-size="22" fill="#565650" text-anchor="middle" opacity="0.6">Replace via Admin → Content → Homepage</text>
+</svg>

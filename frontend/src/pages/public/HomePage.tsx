@@ -1,17 +1,31 @@
-/**
- * Phase 1 placeholder. Real hero/about/featured-plants/categories/gallery/
- * reviews/map/contact sections are built in the public-frontend phase,
- * per the approved architecture (components/public/*).
- */
+import { useEffect } from 'react';
+import { useFetch } from '@/hooks/useFetch';
+import { fetchSiteContent } from '@/api/content.api';
+import { Hero } from '@/components/public/Hero';
+import { AboutPreview } from '@/components/public/AboutPreview';
+import { CategoryGrid } from '@/components/public/CategoryGrid';
+import { FeaturedPlants } from '@/components/public/FeaturedPlants';
+import { GalleryPreview } from '@/components/public/GalleryPreview';
+import { ReviewsSection } from '@/components/public/ReviewsSection';
+import { MapEmbed } from '@/components/public/MapEmbed';
+import { setPageMeta } from '@/utils/seo';
+
 export default function HomePage() {
+  const { data: content } = useFetch(fetchSiteContent, []);
+
+  useEffect(() => {
+    setPageMeta('בית', 'משתלת אליאסמין - מגוון עצום של צמחים, פרחים, עצים ועציצים בג׳ת');
+  }, []);
+
   return (
-    <main className="flex min-h-[60vh] flex-col items-center justify-center gap-2 px-6 text-center">
-      <h1 className="font-display text-3xl text-[var(--color-forest-800)]">
-        משתלת אליאסמין
-      </h1>
-      <p className="font-body text-[var(--color-ink-600)]">
-        מشتل الياسمين — Homepage scaffold, content coming in a later phase.
-      </p>
+    <main>
+      <Hero content={content} />
+      <AboutPreview content={content} />
+      <CategoryGrid />
+      <FeaturedPlants />
+      <GalleryPreview />
+      <ReviewsSection />
+      <MapEmbed mapEmbedUrl={content?.mapEmbedUrl} address={content?.address} />
     </main>
   );
 }

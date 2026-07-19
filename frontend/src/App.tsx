@@ -1,5 +1,6 @@
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
+import { ToastProvider } from '@/context/ToastContext';
 import { AppRouter } from '@/routes/AppRouter';
 
 /**
@@ -9,11 +10,13 @@ import { AppRouter } from '@/routes/AppRouter';
 function App() {
   return (
     <div dir="rtl" lang="he">
-      <AuthProvider>
-        <BrowserRouter>
-          <AppRouter />
-        </BrowserRouter>
-      </AuthProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <AppRouter />
+          </BrowserRouter>
+        </AuthProvider>
+      </ToastProvider>
     </div>
   );
 }
