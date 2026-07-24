@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { GalleryItem } from '@/types/gallery.types';
 
 interface LightboxGalleryProps {
@@ -7,6 +8,8 @@ interface LightboxGalleryProps {
 
 export function LightboxGallery({ items }: LightboxGalleryProps) {
   const [activeImage, setActiveImage] = useState<{ url: string; title: string } | null>(null);
+  const { i18n } = useTranslation();
+  const key = i18n.language === 'ar' ? 'ar' : 'he';
 
   return (
     <>
@@ -15,12 +18,12 @@ export function LightboxGallery({ items }: LightboxGalleryProps) {
           item.images.map((img, idx) => (
             <button
               key={`${item._id}-${idx}`}
-              onClick={() => setActiveImage({ url: img.url, title: item.title.he })}
-              className="aspect-square overflow-hidden rounded-xl bg-[var(--color-sage-100)] transition-transform hover:scale-[1.02]"
+              onClick={() => setActiveImage({ url: img.url, title: item.title[key] })}
+              className="aspect-square animate-[scaleIn_0.3s_var(--ease-botanical)] overflow-hidden rounded-2xl bg-[var(--color-sage-100)] shadow-[var(--shadow-soft)] transition-transform duration-300 hover:scale-[1.03]"
             >
               <img
                 src={img.url}
-                alt={item.title.he}
+                alt={item.title[key]}
                 loading="lazy"
                 className="h-full w-full object-cover"
               />
@@ -31,7 +34,7 @@ export function LightboxGallery({ items }: LightboxGalleryProps) {
 
       {activeImage && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 animate-[fadeIn_0.2s_ease-out]"
           onClick={() => setActiveImage(null)}
           role="dialog"
           aria-modal="true"

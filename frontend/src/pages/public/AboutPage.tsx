@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useFetch } from '@/hooks/useFetch';
 import { fetchSiteContent } from '@/api/content.api';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -6,16 +7,18 @@ import { ErrorState } from '@/components/ui/ErrorState';
 import { setPageMeta } from '@/utils/seo';
 
 export default function AboutPage() {
+  const { t, i18n } = useTranslation();
+  const key = i18n.language === 'ar' ? 'ar' : 'he';
   const { data: content, status, error, refetch } = useFetch(fetchSiteContent, []);
 
   useEffect(() => {
-    setPageMeta('אודות', 'סיפורה של משתלת אליאסמין, הניסיון והערכים שלנו');
-  }, []);
+    setPageMeta(t('about.title'), undefined);
+  }, [t]);
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-16 md:px-6">
-      <h1 className="font-display mb-6 text-center text-3xl text-[var(--color-forest-800)]">
-        אודות המשתלה
+      <h1 className="font-display mb-8 text-center text-3xl text-[var(--color-forest-800)] md:text-4xl">
+        {t('about.title')}
       </h1>
 
       {status === 'loading' && (
@@ -29,12 +32,8 @@ export default function AboutPage() {
       {status === 'error' && <ErrorState message={error ?? undefined} onRetry={refetch} />}
 
       {status === 'success' && (
-        <div className="space-y-4 leading-relaxed text-[var(--color-ink-900)]">
-          <p>{content?.aboutText?.he ?? '[טקסט זמני — יוחלף בתוכן אמיתי על ידי הלקוח]'}</p>
-          <p className="text-[var(--color-ink-600)]">
-            משתלת אליאסמין נמצאת בג'ת ומציעה מגוון עצום של צמחים, פרחים, עצים ועציצים ללקוחות פרטיים
-            ומקצועיים באזור. הצוות שלנו זמין לייעוץ אישי ולעזרה במציאת הפתרון הנכון לגינה או לבית שלכם.
-          </p>
+        <div className="space-y-4 text-lg leading-relaxed text-[var(--color-ink-900)]">
+          <p>{content?.aboutText?.[key] ?? t('about.fallback')}</p>
         </div>
       )}
     </main>

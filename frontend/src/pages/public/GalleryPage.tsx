@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useFetch } from '@/hooks/useFetch';
 import { fetchGallery } from '@/api/gallery.api';
 import { LightboxGallery } from '@/components/public/LightboxGallery';
@@ -7,27 +8,30 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { setPageMeta } from '@/utils/seo';
 
-const CATEGORY_TABS = [
-  { value: undefined, label: 'הכל' },
-  { value: 'nursery', label: 'המשתלה' },
-  { value: 'before-after', label: 'עיצוב גינות' },
-  { value: 'events', label: 'אירועים' },
-];
-
 export default function GalleryPage() {
+  const { t } = useTranslation();
   const [category, setCategory] = useState<string | undefined>(undefined);
 
+  const CATEGORY_TABS = [
+    { value: undefined, label: t('gallery.tabAll') },
+    { value: 'nursery', label: t('gallery.tabNursery') },
+    { value: 'before-after', label: t('gallery.tabBeforeAfter') },
+    { value: 'events', label: t('gallery.tabEvents') },
+  ];
+
   useEffect(() => {
-    setPageMeta('גלריה', 'תמונות מהמשתלה, מהעיצובים ומהמוצרים שלנו');
-  }, []);
+    setPageMeta(t('gallery.title'), undefined);
+  }, [t]);
 
   const { data: items, status, error, refetch } = useFetch(() => fetchGallery(category), [category]);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-12 md:px-6">
-      <h1 className="font-display mb-6 text-center text-3xl text-[var(--color-forest-800)]">גלריה</h1>
+    <main className="mx-auto max-w-6xl px-4 py-14 md:px-6">
+      <h1 className="font-display mb-8 text-center text-3xl text-[var(--color-forest-800)] md:text-4xl">
+        {t('gallery.title')}
+      </h1>
 
-      <div className="mb-8 flex justify-center gap-2 overflow-x-auto">
+      <div className="mb-10 flex justify-center gap-2 overflow-x-auto">
         {CATEGORY_TABS.map((tab) => (
           <button
             key={tab.label}
@@ -46,16 +50,14 @@ export default function GalleryPage() {
       {status === 'loading' && (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="aspect-square w-full rounded-xl" />
+            <Skeleton key={i} className="aspect-square w-full rounded-2xl" />
           ))}
         </div>
       )}
 
       {status === 'error' && <ErrorState message={error ?? undefined} onRetry={refetch} />}
 
-      {status === 'success' && (items?.length ?? 0) === 0 && (
-        <EmptyState title="אין עדיין תמונות בקטגוריה זו" />
-      )}
+      {status === 'success' && (items?.length ?? 0) === 0 && <EmptyState title={t('gallery.empty')} />}
 
       {status === 'success' && items && items.length > 0 && <LightboxGallery items={items} />}
     </main>

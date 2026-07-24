@@ -1,0 +1,131 @@
+{
+  "nav": {
+    "home": "בית",
+    "about": "אודות",
+    "catalog": "קטלוג צמחים",
+    "gallery": "גלריה",
+    "services": "שירותים",
+    "contact": "צור קשר",
+    "adminLogin": "כניסת מנהל"
+  },
+  "common": {
+    "loading": "טוען...",
+    "tryAgain": "נסה שוב",
+    "viewMore": "לפרטים נוספים",
+    "back": "חזרה",
+    "language": "שפה"
+  },
+  "home": {
+    "heroTitleFallback": "משתלת אליאסמין",
+    "heroSubtitleFallback": "מגוון עצום של צמחים, פרחים ועצים",
+    "viewPlants": "עיינו בצמחים",
+    "contactWhatsApp": "צור קשר בוואטסאפ",
+    "aboutTitle": "קצת עלינו",
+    "aboutReadMore": "קראו עוד עלינו",
+    "categoriesTitle": "קטגוריות",
+    "categoriesEmpty": "אין עדיין קטגוריות",
+    "featuredTitle": "צמחים נבחרים",
+    "featuredEmpty": "אין עדיין צמחים להצגה",
+    "featuredEmptyDesc": "בקרוב יתווספו צמחים לקטלוג",
+    "galleryTitle": "גלריה",
+    "galleryEmpty": "הגלריה תתעדכן בקרוב",
+    "galleryViewAll": "לצפייה בגלריה המלאה",
+    "reviewsTitle": "מה הלקוחות אומרים",
+    "reviewsCount": "ביקורות בגוגל",
+    "mapTitle": "איך מגיעים אלינו"
+  },
+  "plant": {
+    "priceOnRequest": "לפי בקשה",
+    "inStock": "במלאי",
+    "lowStock": "מלאי מוגבל",
+    "outOfStock": "אזל מהמלאי",
+    "waterLow": "השקיה מועטה",
+    "waterMedium": "השקיה בינונית",
+    "waterHigh": "השקיה מרובה",
+    "sunFull": "שמש מלאה",
+    "sunPartial": "צל חלקי",
+    "sunShade": "צל מלא",
+    "whatsappInquiry": "בירור זמינות בוואטסאפ",
+    "backToCatalog": "חזרה לקטלוג",
+    "water": "השקיה",
+    "sunlight": "תאורה"
+  },
+  "catalog": {
+    "title": "קטלוג הצמחים",
+    "searchPlaceholder": "חיפוש צמח לפי שם...",
+    "allCategories": "כל הקטגוריות",
+    "sortNewest": "החדשים ביותר",
+    "sortNameAsc": "שם: א-ת",
+    "sortNameDesc": "שם: ת-א",
+    "sortPriceAsc": "מחיר: מהנמוך לגבוה",
+    "sortPriceDesc": "מחיר: מהגבוה לנמוך",
+    "empty": "לא נמצאו צמחים",
+    "emptyDesc": "נסו לשנות את החיפוש או הסינון",
+    "prev": "הקודם",
+    "next": "הבא",
+    "pageOf": "עמוד {{page}} מתוך {{pages}}"
+  },
+  "gallery": {
+    "title": "גלריה",
+    "tabAll": "הכל",
+    "tabNursery": "המשתלה",
+    "tabBeforeAfter": "עיצוב גינות",
+    "tabEvents": "אירועים",
+    "empty": "אין עדיין תמונות בקטגוריה זו"
+  },
+  "services": {
+    "title": "השירותים שלנו",
+    "subtitle": "[תוכן זמני — יעודכן עם פרטי השירותים המדויקים של הלקוח]"
+  },
+  "about": {
+    "title": "אודות המשתלה",
+    "fallback": "[טקסט זמני — יוחלף בתוכן אמיתי על ידי הלקוח]"
+  },
+  "contact": {
+    "title": "צור קשר",
+    "detailsTitle": "פרטי התקשרות",
+    "formTitle": "שלחו לנו הודעה",
+    "whatsappCta": "שלחו הודעה בוואטסאפ",
+    "form": {
+      "name": "שם מלא",
+      "phone": "טלפון",
+      "email": "אימייל (אופציונלי)",
+      "message": "הודעה",
+      "submit": "שליחה",
+      "sending": "שולח...",
+      "successTitle": "תודה על פנייתכם!",
+      "successBody": "ניצור איתכם קשר בהקדם.",
+      "sendAnother": "שליחת הודעה נוספת"
+    }
+  },
+  "footer": {
+    "contact": "יצירת קשר",
+    "hours": "שעות פתיחה",
+    "hoursSoon": "שעות פתיחה יעודכנו בקרוב"
+  },
+  "notFound": {
+    "title": "404 — הדף לא נמצא",
+    "desc": "בדקו את הכתובת ונסו שוב."
+  },
+  "admin": {
+    "login": {
+      "title": "כניסת מנהל",
+      "subtitle": "משתלת אליאסמין — לוח ניהול",
+      "username": "שם משתמש",
+      "password": "סיסמה",
+      "submit": "התחברות",
+      "submitting": "מתחבר...",
+      "error": "שם משתמש או סיסמה שגויים"
+    },
+    "sidebar": {
+      "title": "ניהול משתלה",
+      "dashboard": "לוח בקרה",
+      "plants": "צמחים",
+      "categories": "קטגוריות",
+      "gallery": "גלריה",
+      "content": "תוכן האתר",
+      "messages": "הודעות",
+      "logout": "התנתקות"
+    }
+  }
+}

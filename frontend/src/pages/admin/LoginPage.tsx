@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 
 /**
@@ -11,6 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
  * component's state or localStorage.
  */
 export default function LoginPage() {
+  const { t } = useTranslation();
   const { login, isAuthenticated } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -28,44 +30,45 @@ export default function LoginPage() {
     try {
       await login(username, password);
     } catch {
-      setError('שם משתמש או סיסמה שגויים');
+      setError(t('admin.login.error'));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--color-sage-100)] px-4">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[var(--color-sage-100)] to-[var(--color-cream-100)] px-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm rounded-xl border border-[var(--color-sage-200)] bg-[var(--color-cream-50)] p-8 shadow-sm"
+        className="w-full max-w-sm animate-[fadeInUp_0.4s_var(--ease-botanical)] rounded-2xl border border-[var(--color-sage-200)] bg-[var(--color-cream-50)] p-8 shadow-[var(--shadow-lifted)]"
       >
-        <h1 className="font-display mb-1 text-xl text-[var(--color-forest-800)]">
-          כניסת מנהל
-        </h1>
-        <p className="mb-6 text-sm text-[var(--color-ink-600)]">
-          משתלת אליאסמין — לוח ניהול
-        </p>
+        <div className="mb-6 text-center">
+          <span className="mb-2 block text-3xl" aria-hidden="true">🌿</span>
+          <h1 className="font-display mb-1 text-xl text-[var(--color-forest-800)]">
+            {t('admin.login.title')}
+          </h1>
+          <p className="text-sm text-[var(--color-ink-600)]">{t('admin.login.subtitle')}</p>
+        </div>
 
         <label className="mb-3 block text-sm">
-          שם משתמש
+          {t('admin.login.username')}
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
-            className="mt-1 w-full rounded-md border border-[var(--color-sage-300)] px-3 py-2 outline-none focus:border-[var(--color-forest-600)]"
+            className="mt-1 w-full rounded-lg border border-[var(--color-sage-300)] px-3 py-2.5 outline-none transition-colors focus:border-[var(--color-forest-600)]"
           />
         </label>
 
-        <label className="mb-4 block text-sm">
-          סיסמה
+        <label className="mb-5 block text-sm">
+          {t('admin.login.password')}
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="mt-1 w-full rounded-md border border-[var(--color-sage-300)] px-3 py-2 outline-none focus:border-[var(--color-forest-600)]"
+            className="mt-1 w-full rounded-lg border border-[var(--color-sage-300)] px-3 py-2.5 outline-none transition-colors focus:border-[var(--color-forest-600)]"
           />
         </label>
 
@@ -78,9 +81,9 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-md bg-[var(--color-forest-700)] py-2 font-medium text-white transition-colors hover:bg-[var(--color-forest-800)] disabled:opacity-60"
+          className="w-full rounded-lg bg-[var(--color-forest-700)] py-2.5 font-medium text-white shadow-[0_2px_8px_rgba(32,74,43,0.25)] transition-all hover:bg-[var(--color-forest-800)] active:scale-[0.98] disabled:opacity-60"
         >
-          {isSubmitting ? 'מתחבר...' : 'התחברות'}
+          {isSubmitting ? t('admin.login.submitting') : t('admin.login.submit')}
         </button>
       </form>
     </main>

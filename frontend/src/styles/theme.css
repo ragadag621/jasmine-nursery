@@ -36,12 +36,18 @@
   --color-ink-900: #1c1c1a;
   --color-ink-600: #565650;
 
-  /* Typography */
+  /* Typography — real fonts loaded via Google Fonts in index.html */
   --font-display: 'Fraunces', 'Frank Ruhl Libre', 'Noto Serif Hebrew', serif;
   --font-body: 'Inter', 'Noto Sans Hebrew', 'Noto Sans Arabic', sans-serif;
 
   /* Motion */
   --ease-botanical: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Elevation — subtle, warm-tinted shadows instead of default gray,
+     so cards/modals read as part of the botanical palette, not generic UI */
+  --shadow-soft: 0 1px 2px rgba(32, 74, 43, 0.04), 0 2px 8px rgba(32, 74, 43, 0.06);
+  --shadow-medium: 0 4px 12px rgba(32, 74, 43, 0.08), 0 2px 4px rgba(32, 74, 43, 0.06);
+  --shadow-lifted: 0 12px 32px rgba(32, 74, 43, 0.14), 0 4px 8px rgba(32, 74, 43, 0.08);
 }
 
 html,
@@ -51,6 +57,8 @@ body {
   font-family: var(--font-body);
   background-color: var(--color-cream-100);
   color: var(--color-ink-900);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 /* RTL is the default reading direction for this app (Hebrew/Arabic);
@@ -64,6 +72,55 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+/* Refined focus ring — visible for keyboard users, not the harsh browser
+   default blue outline that clashes with the botanical palette */
+:focus-visible {
+  outline: 2px solid var(--color-forest-600);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background-color: var(--color-forest-600);
+  color: white;
+}
+
+/* Animation keyframes used across Hero, Toast, cards, and scroll-reveal
+   sections. Defined once here rather than duplicated per-component. */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Reduced motion respect — required for the animation-heavy design direction */

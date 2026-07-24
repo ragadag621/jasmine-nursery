@@ -1,0 +1,131 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "about": "من نحن",
+    "catalog": "كتالوج النباتات",
+    "gallery": "معرض الصور",
+    "services": "خدماتنا",
+    "contact": "اتصل بنا",
+    "adminLogin": "دخول المدير"
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "tryAgain": "حاول مرة أخرى",
+    "viewMore": "لمزيد من التفاصيل",
+    "back": "رجوع",
+    "language": "اللغة"
+  },
+  "home": {
+    "heroTitleFallback": "مشتل الياسمين",
+    "heroSubtitleFallback": "تشكيلة واسعة من النباتات والزهور والأشجار",
+    "viewPlants": "تصفح النباتات",
+    "contactWhatsApp": "تواصل عبر واتساب",
+    "aboutTitle": "من نحن",
+    "aboutReadMore": "اقرأ المزيد عنا",
+    "categoriesTitle": "الفئات",
+    "categoriesEmpty": "لا توجد فئات بعد",
+    "featuredTitle": "نباتات مختارة",
+    "featuredEmpty": "لا توجد نباتات لعرضها بعد",
+    "featuredEmptyDesc": "ستتم إضافة نباتات إلى الكتالوج قريباً",
+    "galleryTitle": "معرض الصور",
+    "galleryEmpty": "سيتم تحديث المعرض قريباً",
+    "galleryViewAll": "لمشاهدة المعرض الكامل",
+    "reviewsTitle": "ماذا يقول عملاؤنا",
+    "reviewsCount": "تقييمات على جوجل",
+    "mapTitle": "كيفية الوصول إلينا"
+  },
+  "plant": {
+    "priceOnRequest": "حسب الطلب",
+    "inStock": "متوفر",
+    "lowStock": "مخزون محدود",
+    "outOfStock": "غير متوفر",
+    "waterLow": "ري قليل",
+    "waterMedium": "ري متوسط",
+    "waterHigh": "ري كثيف",
+    "sunFull": "شمس كاملة",
+    "sunPartial": "ظل جزئي",
+    "sunShade": "ظل كامل",
+    "whatsappInquiry": "الاستفسار عن التوفر عبر واتساب",
+    "backToCatalog": "العودة إلى الكتالوج",
+    "water": "الري",
+    "sunlight": "الإضاءة"
+  },
+  "catalog": {
+    "title": "كتالوج النباتات",
+    "searchPlaceholder": "ابحث عن نبات بالاسم...",
+    "allCategories": "جميع الفئات",
+    "sortNewest": "الأحدث",
+    "sortNameAsc": "الاسم: أ-ي",
+    "sortNameDesc": "الاسم: ي-أ",
+    "sortPriceAsc": "السعر: من الأقل للأعلى",
+    "sortPriceDesc": "السعر: من الأعلى للأقل",
+    "empty": "لم يتم العثور على نباتات",
+    "emptyDesc": "حاول تغيير البحث أو الفلترة",
+    "prev": "السابق",
+    "next": "التالي",
+    "pageOf": "صفحة {{page}} من {{pages}}"
+  },
+  "gallery": {
+    "title": "معرض الصور",
+    "tabAll": "الكل",
+    "tabNursery": "المشتل",
+    "tabBeforeAfter": "تصميم الحدائق",
+    "tabEvents": "فعاليات",
+    "empty": "لا توجد صور في هذه الفئة بعد"
+  },
+  "services": {
+    "title": "خدماتنا",
+    "subtitle": "[محتوى مؤقت — سيتم تحديثه بتفاصيل الخدمات الدقيقة من العميل]"
+  },
+  "about": {
+    "title": "عن المشتل",
+    "fallback": "[نص مؤقت — سيتم استبداله بمحتوى حقيقي من العميل]"
+  },
+  "contact": {
+    "title": "اتصل بنا",
+    "detailsTitle": "معلومات التواصل",
+    "formTitle": "أرسل لنا رسالة",
+    "whatsappCta": "أرسل رسالة عبر واتساب",
+    "form": {
+      "name": "الاسم الكامل",
+      "phone": "الهاتف",
+      "email": "البريد الإلكتروني (اختياري)",
+      "message": "الرسالة",
+      "submit": "إرسال",
+      "sending": "جارٍ الإرسال...",
+      "successTitle": "شكراً لتواصلكم!",
+      "successBody": "سنتواصل معكم في أقرب وقت.",
+      "sendAnother": "إرسال رسالة أخرى"
+    }
+  },
+  "footer": {
+    "contact": "تواصل معنا",
+    "hours": "ساعات العمل",
+    "hoursSoon": "سيتم تحديث ساعات العمل قريباً"
+  },
+  "notFound": {
+    "title": "404 — الصفحة غير موجودة",
+    "desc": "تحقق من الرابط وحاول مرة أخرى."
+  },
+  "admin": {
+    "login": {
+      "title": "دخول المدير",
+      "subtitle": "مشتل الياسمين — لوحة الإدارة",
+      "username": "اسم المستخدم",
+      "password": "كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "submitting": "جارٍ الدخول...",
+      "error": "اسم المستخدم أو كلمة المرور غير صحيحة"
+    },
+    "sidebar": {
+      "title": "إدارة المشتل",
+      "dashboard": "لوحة التحكم",
+      "plants": "النباتات",
+      "categories": "الفئات",
+      "gallery": "معرض الصور",
+      "content": "محتوى الموقع",
+      "messages": "الرسائل",
+      "logout": "تسجيل الخروج"
+    }
+  }
+}

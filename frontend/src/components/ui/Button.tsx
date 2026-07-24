@@ -9,13 +9,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<NonNullable<ButtonProps['variant']>, string> = {
   primary:
-    'bg-[var(--color-forest-700)] text-white hover:bg-[var(--color-forest-800)] disabled:bg-[var(--color-forest-700)]/50',
+    'bg-[var(--color-forest-700)] text-white shadow-[0_2px_8px_rgba(32,74,43,0.25)] hover:bg-[var(--color-forest-800)] hover:shadow-[0_4px_14px_rgba(32,74,43,0.32)] active:scale-[0.98] disabled:bg-[var(--color-forest-700)]/50 disabled:shadow-none',
   secondary:
-    'bg-[var(--color-sage-200)] text-[var(--color-forest-900)] hover:bg-[var(--color-sage-300)]',
+    'bg-[var(--color-sage-200)] text-[var(--color-forest-900)] hover:bg-[var(--color-sage-300)] active:scale-[0.98]',
   outline:
-    'border border-[var(--color-forest-700)] text-[var(--color-forest-700)] hover:bg-[var(--color-forest-700)] hover:text-white bg-transparent',
-  ghost: 'bg-transparent text-[var(--color-forest-700)] hover:bg-[var(--color-sage-100)]',
-  danger: 'bg-[var(--color-terracotta-600)] text-white hover:bg-[var(--color-terracotta-500)]',
+    'border border-[var(--color-forest-700)] text-[var(--color-forest-700)] hover:bg-[var(--color-forest-700)] hover:text-white bg-transparent active:scale-[0.98]',
+  ghost: 'bg-transparent text-[var(--color-forest-700)] hover:bg-[var(--color-sage-100)] active:scale-[0.98]',
+  danger: 'bg-[var(--color-terracotta-600)] text-white hover:bg-[var(--color-terracotta-500)] active:scale-[0.98]',
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps['size']>, string> = {
