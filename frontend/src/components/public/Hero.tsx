@@ -25,7 +25,7 @@ export function Hero({ content }: HeroProps) {
 
       <div className="relative z-10 flex max-w-2xl flex-col items-center gap-5 px-4 animate-[fadeInUp_0.7s_var(--ease-botanical)]">
         <span className="rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-xs font-medium tracking-wide text-white backdrop-blur-sm">
-          🌿 {content?.address ?? "ג'ת, ישראל"}
+           {content?.address ?? "כפר קרע | ג'ת"}
         </span>
         <h1 className="font-display text-4xl leading-[1.15] text-white drop-shadow-sm md:text-6xl">
           {content?.heroTitle?.[titleKey] || t('home.heroTitleFallback')}
@@ -38,14 +38,14 @@ export function Hero({ content }: HeroProps) {
             <Button size="lg">{t('home.viewPlants')}</Button>
           </Link>
           <a
-            href={formatWhatsAppLink(content?.whatsapp || content?.phone || '972546643896')}
+            href={formatWhatsAppLink(content?.whatsapp || content?.phone || '+972546643896')}
             target="_blank"
             rel="noopener noreferrer"
           >
             <Button
               size="lg"
               variant="outline"
-              className="border-white/70 bg-white/5 text-white backdrop-blur-sm hover:bg-white hover:text-[var(--color-forest-800)]"
+              className="border-white/70 bg-white/5 text-white backdrop-blur-sm "
             >
               {t('home.contactWhatsApp')}
             </Button>

@@ -79,7 +79,7 @@ export function CategoryForm({ initial, onSubmit, isSubmitting }: CategoryFormPr
         <ImageDropzone
           multiple={false}
           onFilesSelected={(files) => setFile(files[0] ?? null)}
-          existingImageUrls={initial?.image?.url ? [initial.image.url] : []}
+          existingImages={initial?.image?.url ? [{ id: 'current', url: initial.image.url }] : []}
         />
       </div>
 

@@ -12,13 +12,20 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000
  * which limits XSS token theft). `withCredentials: true` is what makes
  * the browser actually send/receive that cookie on cross-origin requests
  * (frontend on Vercel, backend on Render).
+ *
+ * IMPORTANT: no default Content-Type header is set here on purpose.
+ * Axios infers it per-request from the payload: plain JS objects get
+ * `application/json` automatically, while a `FormData` payload (used by
+ * every image-upload endpoint) is left alone so the browser attaches the
+ * correct `multipart/form-data; boundary=...` header itself. Setting a
+ * fixed `application/json` default here previously made axios convert
+ * every FormData upload into a plain JSON object before sending it —
+ * multer never saw multipart data, so uploaded files were silently
+ * dropped on every create/update call that included an image.
  */
 export const axiosClient = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 /**

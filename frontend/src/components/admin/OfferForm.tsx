@@ -81,7 +81,7 @@ export function OfferForm({ initial, onSubmit, isSubmitting, onCancel }: OfferFo
       <ImageDropzone
         multiple={false}
         onFilesSelected={(files) => setFile(files[0] ?? null)}
-        existingImageUrls={initial?.image?.url ? [initial.image.url] : []}
+        existingImages={initial?.image?.url ? [{ id: 'current', url: initial.image.url }] : []}
       />
 
       <div className="flex gap-2">

@@ -7,6 +7,7 @@ export interface PlantImage {
   url: string;
   publicId: string;
   order: number;
+  _id?: string;
 }
 
 export type Availability = 'in_stock' | 'low_stock' | 'out_of_stock';

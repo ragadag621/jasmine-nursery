@@ -4,7 +4,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { AppRouter } from '@/routes/AppRouter';
-import { LANGUAGE_DIRECTION, type SupportedLanguage } from './i18n';
+import { LANGUAGE_DIRECTION, type SupportedLanguage } from '@/i18n';
+
 /**
  * dir/lang are driven by the active i18n language rather than hardcoded —
  * both Hebrew and Arabic are RTL today, but this stays correct if/when

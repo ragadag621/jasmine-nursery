@@ -3,6 +3,8 @@ import type { FormEvent } from 'react';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ImageDropzone } from './ImageDropzone';
+import { deletePlantImage } from '@/api/plants.api';
+import { useToast } from '@/context/ToastContext';
 import type { Category } from '@/types/category.types';
 import type { Plant, Availability, WaterNeed, SunlightNeed } from '@/types/plant.types';
 
@@ -29,6 +31,7 @@ interface PlantFormProps {
 }
 
 export function PlantForm({ categories, initial, onSubmit, isSubmitting }: PlantFormProps) {
+  const { showToast } = useToast();
   const [values, setValues] = useState<PlantFormValues>({
     nameHe: initial?.name.he ?? '',
     nameAr: initial?.name.ar ?? '',
@@ -44,10 +47,37 @@ export function PlantForm({ categories, initial, onSubmit, isSubmitting }: Plant
     featured: initial?.featured ?? false,
   });
   const [files, setFiles] = useState<File[]>([]);
+  // Local mirror of the plant's saved images, so removing one updates the UI
+  // immediately without needing to reload the whole edit page.
+  const [existingImages, setExistingImages] = useState(
+    (initial?.images ?? []).filter((img) => !!img._id).map((img) => ({ id: img._id as string, url: img.url }))
+  );
+  const [isRemovingImage, setIsRemovingImage] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     await onSubmit(values, files);
+  };
+
+  /**
+   * Deletes a single existing image right away (its own request, separate
+   * from the main form submit) — this is what actually fixes the "new
+   * image never shows" issue: previously there was no way to remove the
+   * old cover image, so it stayed at position 0 forever no matter how many
+   * new images were added afterward.
+   */
+  const handleRemoveExisting = async (imageId: string) => {
+    if (!initial?._id) return;
+    setIsRemovingImage(true);
+    try {
+      await deletePlantImage(initial._id, imageId);
+      setExistingImages((prev) => prev.filter((img) => img.id !== imageId));
+      showToast('התמונה הוסרה בהצלחה', 'success');
+    } catch {
+      showToast('הסרת התמונה נכשלה', 'error');
+    } finally {
+      setIsRemovingImage(false);
+    }
   };
 
   return (
@@ -179,11 +209,18 @@ export function PlantForm({ categories, initial, onSubmit, isSubmitting }: Plant
       </label>
 
       <div>
-        <span className="mb-1 block text-sm font-medium">תמונות</span>
+        <span className="mb-1 block text-sm font-medium">
+          תמונות {isRemovingImage && '(מסיר...)'}
+        </span>
+        <p className="mb-2 text-xs text-[var(--color-ink-600)]">
+          התמונה הראשונה ברשימה היא זו שמוצגת בכרטיס הצמח ובקטלוג. כדי להחליף אותה, הסירו אותה קודם (✕
+          בריחוף) ואז העלו את התמונה החדשה.
+        </p>
         <ImageDropzone
           multiple
           onFilesSelected={setFiles}
-          existingImageUrls={initial?.images.map((img) => img.url) ?? []}
+          existingImages={existingImages}
+          onRemoveExisting={initial ? handleRemoveExisting : undefined}
         />
       </div>
 

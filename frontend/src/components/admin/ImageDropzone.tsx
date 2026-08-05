@@ -1,13 +1,24 @@
 import { useRef, useState } from 'react';
 import type { ChangeEvent, DragEvent } from 'react';
 
+export interface ExistingImage {
+  id: string;
+  url: string;
+}
+
 interface ImageDropzoneProps {
   multiple?: boolean;
   onFilesSelected: (files: File[]) => void;
-  existingImageUrls?: string[];
+  existingImages?: ExistingImage[];
+  onRemoveExisting?: (id: string) => void;
 }
 
-export function ImageDropzone({ multiple = true, onFilesSelected, existingImageUrls = [] }: ImageDropzoneProps) {
+export function ImageDropzone({
+  multiple = true,
+  onFilesSelected,
+  existingImages = [],
+  onRemoveExisting,
+}: ImageDropzoneProps) {
   const [previews, setPreviews] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -44,13 +55,30 @@ export function ImageDropzone({ multiple = true, onFilesSelected, existingImageU
         />
       </div>
 
-      {(previews.length > 0 || existingImageUrls.length > 0) && (
+      {(previews.length > 0 || existingImages.length > 0) && (
         <div className="mt-3 flex flex-wrap gap-2">
-          {existingImageUrls.map((url, i) => (
-            <img key={`existing-${i}`} src={url} alt="" className="h-16 w-16 rounded-md object-cover opacity-80" />
+          {existingImages.map((img) => (
+            <div key={img.id} className="group relative">
+              <img src={img.url} alt="" className="h-16 w-16 rounded-md object-cover opacity-90" />
+              {onRemoveExisting && (
+                <button
+                  type="button"
+                  onClick={() => onRemoveExisting(img.id)}
+                  aria-label="הסרת תמונה"
+                  className="absolute -top-1.5 -left-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-terracotta-600)] text-xs text-white opacity-0 shadow transition-opacity group-hover:opacity-100"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           ))}
           {previews.map((url, i) => (
-            <img key={`new-${i}`} src={url} alt="" className="h-16 w-16 rounded-md object-cover ring-2 ring-[var(--color-forest-500)]" />
+            <img
+              key={`new-${i}`}
+              src={url}
+              alt=""
+              className="h-16 w-16 rounded-md object-cover ring-2 ring-[var(--color-forest-500)]"
+            />
           ))}
         </div>
       )}
