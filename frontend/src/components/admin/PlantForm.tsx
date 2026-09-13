@@ -1,12 +1,22 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { Input, Textarea } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ImageDropzone } from './ImageDropzone';
+
 import { deletePlantImage } from '@/api/plants.api';
+
 import { useToast } from '@/context/ToastContext';
+
 import type { Category } from '@/types/category.types';
-import type { Plant, Availability, WaterNeed, SunlightNeed } from '@/types/plant.types';
+import type {
+  Plant,
+  Availability,
+  WaterNeed,
+  SunlightNeed,
+} from '@/types/plant.types';
 
 export interface PlantFormValues {
   nameHe: string;
@@ -26,206 +36,587 @@ export interface PlantFormValues {
 interface PlantFormProps {
   categories: Category[];
   initial?: Plant;
-  onSubmit: (values: PlantFormValues, files: File[]) => Promise<void>;
+  onSubmit: (
+    values: PlantFormValues,
+    files: File[]
+  ) => Promise<void>;
   isSubmitting: boolean;
 }
 
-export function PlantForm({ categories, initial, onSubmit, isSubmitting }: PlantFormProps) {
+export function PlantForm({
+  categories,
+  initial,
+  onSubmit,
+  isSubmitting,
+}: PlantFormProps) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
-  const [values, setValues] = useState<PlantFormValues>({
-    nameHe: initial?.name.he ?? '',
-    nameAr: initial?.name.ar ?? '',
-    scientificName: initial?.scientificName ?? '',
-    slug: initial?.slug ?? '',
-    descriptionHe: initial?.description.he ?? '',
-    descriptionAr: initial?.description.ar ?? '',
-    category: initial?.category ?? categories[0]?._id ?? '',
-    price: initial?.price?.toString() ?? '',
-    availability: initial?.availability ?? 'in_stock',
-    water: initial?.care.water ?? 'medium',
-    sunlight: initial?.care.sunlight ?? 'partial_shade',
-    featured: initial?.featured ?? false,
-  });
-  const [files, setFiles] = useState<File[]>([]);
-  // Local mirror of the plant's saved images, so removing one updates the UI
-  // immediately without needing to reload the whole edit page.
-  const [existingImages, setExistingImages] = useState(
-    (initial?.images ?? []).filter((img) => !!img._id).map((img) => ({ id: img._id as string, url: img.url }))
-  );
-  const [isRemovingImage, setIsRemovingImage] = useState(false);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const [values, setValues] =
+    useState<PlantFormValues>({
+      nameHe: initial?.name.he ?? '',
+      nameAr: initial?.name.ar ?? '',
+      scientificName:
+        initial?.scientificName ?? '',
+      slug: initial?.slug ?? '',
+      descriptionHe:
+        initial?.description.he ?? '',
+      descriptionAr:
+        initial?.description.ar ?? '',
+      category:
+        initial?.category ??
+        categories[0]?._id ??
+        '',
+      price:
+        initial?.price?.toString() ?? '',
+      availability:
+        initial?.availability ??
+        'in_stock',
+      water:
+        initial?.care.water ??
+        'medium',
+      sunlight:
+        initial?.care.sunlight ??
+        'partial_shade',
+      featured:
+        initial?.featured ?? false,
+    });
+
+  const [files, setFiles] = useState<File[]>(
+    []
+  );
+
+  // Local mirror of saved images so removing
+  // one updates the UI immediately.
+  const [existingImages, setExistingImages] =
+    useState(
+      (initial?.images ?? [])
+        .filter((img) => !!img._id)
+        .map((img) => ({
+          id: img._id as string,
+          url: img.url,
+        }))
+    );
+
+  const [isRemovingImage, setIsRemovingImage] =
+    useState(false);
+
+  const handleSubmit = async (
+    e: FormEvent
+  ) => {
     e.preventDefault();
+
     await onSubmit(values, files);
   };
 
-  /**
-   * Deletes a single existing image right away (its own request, separate
-   * from the main form submit) — this is what actually fixes the "new
-   * image never shows" issue: previously there was no way to remove the
-   * old cover image, so it stayed at position 0 forever no matter how many
-   * new images were added afterward.
-   */
-  const handleRemoveExisting = async (imageId: string) => {
+  const handleRemoveExisting = async (
+    imageId: string
+  ) => {
     if (!initial?._id) return;
+
     setIsRemovingImage(true);
+
     try {
-      await deletePlantImage(initial._id, imageId);
-      setExistingImages((prev) => prev.filter((img) => img.id !== imageId));
-      showToast('התמונה הוסרה בהצלחה', 'success');
+      await deletePlantImage(
+        initial._id,
+        imageId
+      );
+
+      setExistingImages((prev) =>
+        prev.filter(
+          (img) => img.id !== imageId
+        )
+      );
+
+      showToast(
+        t('admin.plantForm.imageRemoved'),
+        'success'
+      );
     } catch {
-      showToast('הסרת התמונה נכשלה', 'error');
+      showToast(
+        t('admin.plantForm.imageRemoveFailed'),
+        'error'
+      );
     } finally {
       setIsRemovingImage(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form
+      onSubmit={handleSubmit}
+      className="
+        flex
+        w-full
+        flex-col
+        gap-5
+        sm:gap-6
+      "
+    >
+      {/* Plant names */}
       <div className="grid gap-4 md:grid-cols-2">
         <Input
-          label="שם הצמח (עברית)"
+          label={t('admin.plantForm.nameHe')}
           value={values.nameHe}
-          onChange={(e) => setValues({ ...values, nameHe: e.target.value })}
+          onChange={(e) =>
+            setValues({
+              ...values,
+              nameHe: e.target.value,
+            })
+          }
+          required
+          autoComplete="off"
+        />
+
+        <Input
+          label={t('admin.plantForm.nameAr')}
+          value={values.nameAr}
+          onChange={(e) =>
+            setValues({
+              ...values,
+              nameAr: e.target.value,
+            })
+          }
+          required
+          dir="rtl"
+          autoComplete="off"
+        />
+      </div>
+
+      {/* Scientific name + slug */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Input
+          label={t(
+            'admin.plantForm.scientificName'
+          )}
+          value={values.scientificName}
+          onChange={(e) =>
+            setValues({
+              ...values,
+              scientificName:
+                e.target.value,
+            })
+          }
+          dir="ltr"
+          autoComplete="off"
+        />
+
+        <Input
+          label={t('admin.plantForm.slug')}
+          value={values.slug}
+          onChange={(e) =>
+            setValues({
+              ...values,
+              slug: e.target.value,
+            })
+          }
+          placeholder={t(
+            'admin.plantForm.slugPlaceholder'
+          )}
+          dir="ltr"
+          required
+          autoComplete="off"
+        />
+      </div>
+
+      {/* Descriptions */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Textarea
+          label={t(
+            'admin.plantForm.descriptionHe'
+          )}
+          rows={4}
+          value={values.descriptionHe}
+          onChange={(e) =>
+            setValues({
+              ...values,
+              descriptionHe:
+                e.target.value,
+            })
+          }
           required
         />
-        <Input
-          label="שם הצמח (ערבית)"
-          value={values.nameAr}
-          onChange={(e) => setValues({ ...values, nameAr: e.target.value })}
+
+        <Textarea
+          label={t(
+            'admin.plantForm.descriptionAr'
+          )}
+          rows={4}
+          value={values.descriptionAr}
+          onChange={(e) =>
+            setValues({
+              ...values,
+              descriptionAr:
+                e.target.value,
+            })
+          }
           required
           dir="rtl"
         />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Input
-          label="שם מדעי (אופציונלי)"
-          value={values.scientificName}
-          onChange={(e) => setValues({ ...values, scientificName: e.target.value })}
-          dir="ltr"
-        />
-        <Input
-          label="Slug (מזהה כתובת URL)"
-          value={values.slug}
-          onChange={(e) => setValues({ ...values, slug: e.target.value })}
-          placeholder="e.g. monstera-deliciosa"
-          dir="ltr"
-          required
-        />
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <Textarea
-          label="תיאור (עברית)"
-          rows={3}
-          value={values.descriptionHe}
-          onChange={(e) => setValues({ ...values, descriptionHe: e.target.value })}
-          required
-        />
-        <Textarea
-          label="תיאור (ערבית)"
-          rows={3}
-          value={values.descriptionAr}
-          onChange={(e) => setValues({ ...values, descriptionAr: e.target.value })}
-          required
-        />
-      </div>
-
+      {/* Category + price + availability */}
       <div className="grid gap-4 md:grid-cols-3">
-        <label className="block text-sm">
-          <span className="mb-1 block font-medium">קטגוריה</span>
+        <label
+          htmlFor="plant-category"
+          className="
+            block
+            text-sm
+            font-medium
+            text-[var(--color-ink-900)]
+          "
+        >
+          <span className="mb-1.5 block">
+            {t('admin.plantForm.category')}
+          </span>
+
           <select
+            id="plant-category"
             value={values.category}
-            onChange={(e) => setValues({ ...values, category: e.target.value })}
-            className="w-full rounded-md border border-[var(--color-sage-300)] px-3 py-2"
+            onChange={(e) =>
+              setValues({
+                ...values,
+                category: e.target.value,
+              })
+            }
             required
+            className="
+              min-h-11
+              w-full
+              rounded-lg
+              border
+              border-[var(--color-sage-300)]
+              bg-[var(--color-cream-50)]
+              px-3
+              py-2.5
+              text-[max(16px,0.95rem)]
+              font-normal
+              text-[var(--color-ink-900)]
+              outline-none
+              transition-colors
+              focus:border-[var(--color-forest-600)]
+              focus:ring-2
+              focus:ring-[var(--color-forest-600)]/15
+            "
           >
-            {categories.map((c) => (
-              <option key={c._id} value={c._id}>
-                {c.name.he}
+            {categories.map((category) => (
+              <option
+                key={category._id}
+                value={category._id}
+              >
+                {category.name.he}
               </option>
             ))}
           </select>
         </label>
 
         <Input
-          label="מחיר (₪, אופציונלי)"
+          label={t('admin.plantForm.price')}
           type="number"
           min="0"
+          step="any"
           value={values.price}
-          onChange={(e) => setValues({ ...values, price: e.target.value })}
+          onChange={(e) =>
+            setValues({
+              ...values,
+              price: e.target.value,
+            })
+          }
+          inputMode="decimal"
         />
 
-        <label className="block text-sm">
-          <span className="mb-1 block font-medium">זמינות</span>
+        <label
+          htmlFor="plant-availability"
+          className="
+            block
+            text-sm
+            font-medium
+            text-[var(--color-ink-900)]
+          "
+        >
+          <span className="mb-1.5 block">
+            {t('admin.plantForm.availability')}
+          </span>
+
           <select
+            id="plant-availability"
             value={values.availability}
-            onChange={(e) => setValues({ ...values, availability: e.target.value as Availability })}
-            className="w-full rounded-md border border-[var(--color-sage-300)] px-3 py-2"
+            onChange={(e) =>
+              setValues({
+                ...values,
+                availability:
+                  e.target
+                    .value as Availability,
+              })
+            }
+            className="
+              min-h-11
+              w-full
+              rounded-lg
+              border
+              border-[var(--color-sage-300)]
+              bg-[var(--color-cream-50)]
+              px-3
+              py-2.5
+              text-[max(16px,0.95rem)]
+              font-normal
+              text-[var(--color-ink-900)]
+              outline-none
+              transition-colors
+              focus:border-[var(--color-forest-600)]
+              focus:ring-2
+              focus:ring-[var(--color-forest-600)]/15
+            "
           >
-            <option value="in_stock">במלאי</option>
-            <option value="low_stock">מלאי מוגבל</option>
-            <option value="out_of_stock">אזל מהמלאי</option>
+            <option value="in_stock">
+              {t(
+                'admin.plantForm.availabilityInStock'
+              )}
+            </option>
+
+            <option value="low_stock">
+              {t(
+                'admin.plantForm.availabilityLowStock'
+              )}
+            </option>
+
+            <option value="out_of_stock">
+              {t(
+                'admin.plantForm.availabilityOutOfStock'
+              )}
+            </option>
           </select>
         </label>
       </div>
 
+      {/* Care requirements */}
       <div className="grid gap-4 md:grid-cols-2">
-        <label className="block text-sm">
-          <span className="mb-1 block font-medium">צורכי השקיה</span>
+        <label
+          htmlFor="plant-water"
+          className="
+            block
+            text-sm
+            font-medium
+            text-[var(--color-ink-900)]
+          "
+        >
+          <span className="mb-1.5 block">
+            {t('admin.plantForm.water')}
+          </span>
+
           <select
+            id="plant-water"
             value={values.water}
-            onChange={(e) => setValues({ ...values, water: e.target.value as WaterNeed })}
-            className="w-full rounded-md border border-[var(--color-sage-300)] px-3 py-2"
+            onChange={(e) =>
+              setValues({
+                ...values,
+                water:
+                  e.target.value as WaterNeed,
+              })
+            }
+            className="
+              min-h-11
+              w-full
+              rounded-lg
+              border
+              border-[var(--color-sage-300)]
+              bg-[var(--color-cream-50)]
+              px-3
+              py-2.5
+              text-[max(16px,0.95rem)]
+              font-normal
+              text-[var(--color-ink-900)]
+              outline-none
+              transition-colors
+              focus:border-[var(--color-forest-600)]
+              focus:ring-2
+              focus:ring-[var(--color-forest-600)]/15
+            "
           >
-            <option value="low">השקיה מועטה</option>
-            <option value="medium">השקיה בינונית</option>
-            <option value="high">השקיה מרובה</option>
+            <option value="low">
+              {t(
+                'admin.plantForm.waterLow'
+              )}
+            </option>
+
+            <option value="medium">
+              {t(
+                'admin.plantForm.waterMedium'
+              )}
+            </option>
+
+            <option value="high">
+              {t(
+                'admin.plantForm.waterHigh'
+              )}
+            </option>
           </select>
         </label>
 
-        <label className="block text-sm">
-          <span className="mb-1 block font-medium">צורכי תאורה</span>
+        <label
+          htmlFor="plant-sunlight"
+          className="
+            block
+            text-sm
+            font-medium
+            text-[var(--color-ink-900)]
+          "
+        >
+          <span className="mb-1.5 block">
+            {t('admin.plantForm.sunlight')}
+          </span>
+
           <select
+            id="plant-sunlight"
             value={values.sunlight}
-            onChange={(e) => setValues({ ...values, sunlight: e.target.value as SunlightNeed })}
-            className="w-full rounded-md border border-[var(--color-sage-300)] px-3 py-2"
+            onChange={(e) =>
+              setValues({
+                ...values,
+                sunlight:
+                  e.target
+                    .value as SunlightNeed,
+              })
+            }
+            className="
+              min-h-11
+              w-full
+              rounded-lg
+              border
+              border-[var(--color-sage-300)]
+              bg-[var(--color-cream-50)]
+              px-3
+              py-2.5
+              text-[max(16px,0.95rem)]
+              font-normal
+              text-[var(--color-ink-900)]
+              outline-none
+              transition-colors
+              focus:border-[var(--color-forest-600)]
+              focus:ring-2
+              focus:ring-[var(--color-forest-600)]/15
+            "
           >
-            <option value="full_sun">שמש מלאה</option>
-            <option value="partial_shade">צל חלקי</option>
-            <option value="full_shade">צל מלא</option>
+            <option value="full_sun">
+              {t(
+                'admin.plantForm.sunlightFullSun'
+              )}
+            </option>
+
+            <option value="partial_shade">
+              {t(
+                'admin.plantForm.sunlightPartialShade'
+              )}
+            </option>
+
+            <option value="full_shade">
+              {t(
+                'admin.plantForm.sunlightFullShade'
+              )}
+            </option>
           </select>
         </label>
       </div>
 
-      <label className="flex items-center gap-2 text-sm">
+      {/* Featured */}
+      <label
+        htmlFor="plant-featured"
+        className="
+          flex
+          min-h-11
+          cursor-pointer
+          items-center
+          gap-3
+          rounded-lg
+          border
+          border-[var(--color-border)]
+          bg-[var(--color-cream-50)]
+          px-3
+          py-2.5
+          text-sm
+          text-[var(--color-ink-900)]
+        "
+      >
         <input
+          id="plant-featured"
           type="checkbox"
           checked={values.featured}
-          onChange={(e) => setValues({ ...values, featured: e.target.checked })}
+          onChange={(e) =>
+            setValues({
+              ...values,
+              featured: e.target.checked,
+            })
+          }
+          className="
+            h-4
+            w-4
+            shrink-0
+            accent-[var(--color-forest-700)]
+          "
         />
-        הצג בעמוד הבית (צמח נבחר)
+
+        <span>
+          {t('admin.plantForm.featured')}
+        </span>
       </label>
 
+      {/* Images */}
       <div>
-        <span className="mb-1 block text-sm font-medium">
-          תמונות {isRemovingImage && '(מסיר...)'}
-        </span>
-        <p className="mb-2 text-xs text-[var(--color-ink-600)]">
-          התמונה הראשונה ברשימה היא זו שמוצגת בכרטיס הצמח ובקטלוג. כדי להחליף אותה, הסירו אותה קודם (✕
-          בריחוף) ואז העלו את התמונה החדשה.
-        </p>
+        <div className="mb-2">
+          <span
+            className="
+              block
+              text-sm
+              font-medium
+              text-[var(--color-ink-900)]
+            "
+          >
+            {t('admin.plantForm.images')}
+
+            {isRemovingImage && (
+              <span className="ms-1 text-xs font-normal text-[var(--color-ink-600)]">
+                {t(
+                  'admin.plantForm.removingImage'
+                )}
+              </span>
+            )}
+          </span>
+
+          <p
+            className="
+              mt-1
+              text-xs
+              leading-5
+              text-[var(--color-ink-600)]
+            "
+          >
+            {t(
+              'admin.plantForm.imagesDescription'
+            )}
+          </p>
+        </div>
+
         <ImageDropzone
           multiple
           onFilesSelected={setFiles}
           existingImages={existingImages}
-          onRemoveExisting={initial ? handleRemoveExisting : undefined}
+          onRemoveExisting={
+            initial
+              ? handleRemoveExisting
+              : undefined
+          }
         />
       </div>
 
-      <Button type="submit" isLoading={isSubmitting} size="lg">
-        {initial ? 'עדכון צמח' : 'הוספת צמח'}
+      {/* Submit */}
+      <Button
+        type="submit"
+        isLoading={isSubmitting}
+        size="lg"
+        className="w-full sm:w-auto sm:self-start"
+      >
+        {initial
+          ? t('admin.plantForm.update')
+          : t('admin.plantForm.create')}
       </Button>
     </form>
   );

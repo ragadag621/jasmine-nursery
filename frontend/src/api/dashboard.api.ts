@@ -5,7 +5,6 @@ export interface DashboardStats {
   categories: number;
   galleryImages: number;
   newMessages: number;
-  totalMessages: number;
 }
 
 export async function fetchDashboardStats(): Promise<DashboardStats> {

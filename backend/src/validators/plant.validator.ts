@@ -37,7 +37,7 @@ export const plantUpdateSchema = z.object({
 });
 
 export const idParamSchema = z.object({
-  params: z.object({ id: z.string().trim().min(1) }),
+  params: z.object({ id: z.string().trim().regex(/^[0-9a-fA-F]{24}$/, 'Invalid plant ID')}),
   query: z.object({}).optional(),
   body: z.object({}).optional(),
 });

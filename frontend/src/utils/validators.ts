@@ -22,8 +22,8 @@ export function validateContactForm(input: {
   if (input.name.trim().length < 2) {
     errors.name = 'השם חייב להכיל לפחות 2 תווים';
   }
-  if (input.phone.trim().length < 7) {
-    errors.phone = 'מספר הטלפון קצר מדי';
+  if (input.phone.trim().length !== 12) {
+    errors.phone = 'מספר הטלפון חייב להכיל 10 תווים';
   }
   if (input.email && input.email.trim() !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email)) {
     errors.email = 'כתובת אימייל לא תקינה';

@@ -20,7 +20,11 @@ export type PlantListQuery = z.infer<typeof plantListQuerySchema>['query'];
 
 export const plantSlugParamsSchema = z.object({
   params: z.object({
-    slug: z.string().trim().min(1),
+   slug: z
+   .string()
+   .trim()
+   .toLowerCase()
+   .regex(/^[a-z0-9-]+$/, 'Invalid plant slug'),
   }),
   query: z.object({}).optional(),
   body: z.object({}).optional(),

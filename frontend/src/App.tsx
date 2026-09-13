@@ -3,8 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { ToastProvider } from '@/context/ToastContext';
+import { ScrollToTop } from '@/components/ui/ScrollToTop';
 import { AppRouter } from '@/routes/AppRouter';
 import { LANGUAGE_DIRECTION, type SupportedLanguage } from '@/i18n';
+
+
 
 /**
  * dir/lang are driven by the active i18n language rather than hardcoded —
@@ -26,6 +29,7 @@ function App() {
       <ToastProvider>
         <AuthProvider>
           <BrowserRouter>
+            <ScrollToTop />
             <AppRouter />
           </BrowserRouter>
         </AuthProvider>

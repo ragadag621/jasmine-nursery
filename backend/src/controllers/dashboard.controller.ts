@@ -4,29 +4,35 @@ import { asyncHandler } from '../utils/asyncHandler';
 
 /**
  * GET /api/dashboard/stats
- * Protected (admin). Powers the admin dashboard's stat cards: total plants,
- * categories, gallery images, and new (unread) contact messages.
+ * Protected (admin).
+ *
+ * Returns the statistics currently displayed by the admin dashboard:
+ * total plants, total categories, total gallery images,
+ * and unread contact messages.
  */
-export const getDashboardStats = asyncHandler(async (_req: Request, res: Response) => {
-  const [plantCount, categoryCount, galleryItems, newMessageCount, totalMessageCount] =
-    await Promise.all([
-      Plant.countDocuments({}),
-      Category.countDocuments({}),
-      Gallery.find({}, 'images'),
-      Contact.countDocuments({ status: 'new' }),
-      Contact.countDocuments({}),
-    ]);
+export const getDashboardStats = asyncHandler(
+  async (_req: Request, res: Response) => {
+    const [plantCount, categoryCount, galleryItems, newMessageCount] =
+      await Promise.all([
+        Plant.countDocuments({}),
+        Category.countDocuments({}),
+        Gallery.find({}, 'images'),
+        Contact.countDocuments({ status: 'new' }),
+      ]);
 
-  const galleryImageCount = galleryItems.reduce((sum, item) => sum + item.images.length, 0);
+    const galleryImageCount = galleryItems.reduce(
+      (sum, item) => sum + item.images.length,
+      0
+    );
 
-  res.status(200).json({
-    success: true,
-    data: {
-      plants: plantCount,
-      categories: categoryCount,
-      galleryImages: galleryImageCount,
-      newMessages: newMessageCount,
-      totalMessages: totalMessageCount,
-    },
-  });
-});
+    res.status(200).json({
+      success: true,
+      data: {
+        plants: plantCount,
+        categories: categoryCount,
+        galleryImages: galleryImageCount,
+        newMessages: newMessageCount,
+      },
+    });
+  }
+);

@@ -8,12 +8,13 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 export function Card({ children, hoverable = false, className = '', ...rest }: CardProps) {
   return (
     <div
-      className={`rounded-xl border border-[var(--color-sage-200)] bg-[var(--color-cream-50)] ${
+      className={`border border-[var(--color-border)] bg-[var(--color-cream-50)] ${
         hoverable
           ? 'transition-all duration-300 ease-[var(--ease-botanical)] hover:-translate-y-1'
           : ''
       } ${className}`}
-      style={{ boxShadow: 'var(--shadow-soft)' }}
+      style={{ boxShadow: 'var(--shadow-soft)', borderRadius: 'var(--radius-card)' }}
+      
       onMouseEnter={
         hoverable
           ? (e) => (e.currentTarget.style.boxShadow = 'var(--shadow-lifted)')

@@ -1,13 +1,18 @@
 {
   "nav": {
-    "home": "בית",
-    "about": "אודות",
+    "home": "דף הבית",
+    "about": "אודותינו",
     "catalog": "קטלוג צמחים",
     "gallery": "גלריה",
-    "services": "שירותים",
+    "services": "השירותים שלנו",
     "contact": "צור קשר",
-    "adminLogin": "כניסת מנהל"
+    "adminLogin": "כניסת מנהל",
+    "brandName": "משתלת אל-יסמין",
+    "ariaLabel": "ניווט ראשי",
+    "openMenu": "פתיחת תפריט",
+    "closeMenu": "סגירת תפריט"
   },
+
   "common": {
     "loading": "טוען...",
     "tryAgain": "נסה שוב",
@@ -15,117 +20,599 @@
     "back": "חזרה",
     "language": "שפה"
   },
+
   "home": {
-    "heroTitleFallback": "משתלת אליאסמין",
-    "heroSubtitleFallback": "מגוון עצום של צמחים, פרחים ועצים",
-    "viewPlants": "עיינו בצמחים",
-    "contactWhatsApp": "צור קשר בוואטסאפ",
-    "aboutTitle": "קצת עלינו",
+    "metaTitle": "משתלת אל-יסמין | צמחים, פרחים ועצים בג׳ת",
+    "metaDescription": "משתלת אל-יסמין בג׳ת — מבחר רחב של צמחים, פרחים, עצים, עציצים ומוצרי גינון.",
+
+    "heroTitleFallback": "משתלת אל-יסמין",
+    "heroSubtitleFallback": "מבחר רחב של צמחים, פרחים ועצים",
+    "heroAddressFallback": "ג׳ת, ישראל",
+
+    "viewPlants": "לצפייה בצמחים",
+    "contactWhatsApp": "צרו קשר בוואטסאפ",
+
+    "aboutTitle": "אודותינו",
     "aboutReadMore": "קראו עוד עלינו",
+
     "categoriesTitle": "קטגוריות",
-    "categoriesEmpty": "אין עדיין קטגוריות",
+    "categoriesEmpty": "אין קטגוריות עדיין",
+
     "featuredTitle": "צמחים נבחרים",
-    "featuredEmpty": "אין עדיין צמחים להצגה",
-    "featuredEmptyDesc": "בקרוב יתווספו צמחים לקטלוג",
+    "featuredEmpty": "אין צמחים להצגה עדיין",
+    "featuredEmptyDesc": "צמחים יתווספו לקטלוג בקרוב",
+
     "galleryTitle": "גלריה",
     "galleryEmpty": "הגלריה תתעדכן בקרוב",
     "galleryViewAll": "לצפייה בגלריה המלאה",
-    "reviewsTitle": "מה הלקוחות אומרים",
+
+    "reviewsTitle": "מה הלקוחות שלנו אומרים",
     "reviewsCount": "ביקורות בגוגל",
-    "mapTitle": "איך מגיעים אלינו"
+
+    "mapTitle": "איך מגיעים אלינו",
+    "mapIframeTitle": "מיקום המשתלה במפה",
+    "mapFallbackAddress": "ג׳ת, ישראל",
+    "mapFallback": "המפה תתעדכן בקרוב",
+
+    "whyTitle": "למה לבחור בנו",
+    "whyQuality": "צמחים באיכות גבוהה",
+    "whyQualityDesc": "כל צמח נבחר ומטופל בקפידה לפני שהוא מגיע אליכם",
+    "whySelection": "מבחר רחב",
+    "whySelectionDesc": "מאות סוגים של צמחים, עצים, פרחים ומוצרי גינון במקום אחד",
+    "whyExpertise": "ייעוץ מקצועי",
+    "whyExpertiseDesc": "הצוות שלנו כאן כדי לעזור לכם לבחור נכון ולטפל בצמחים בהצלחה",
+    "whyLocal": "עסק מקומי ואמין",
+    "whyLocalDesc": "משתלה ותיקה עם קהילת לקוחות שחוזרים אלינו שוב ושוב",
+
+    "finalCtaTitle": "מוכנים להכניס יותר ירוק לבית?",
+    "finalCtaSubtitle": "בקרו אצלנו במשתלה או צרו קשר בוואטסאפ ונשמח לעזור לכם"
   },
+
   "plant": {
-    "priceOnRequest": "לפי בקשה",
+    "priceOnRequest": "מחיר לפי בקשה",
     "inStock": "במלאי",
     "lowStock": "מלאי מוגבל",
     "outOfStock": "אזל מהמלאי",
+
     "waterLow": "השקיה מועטה",
     "waterMedium": "השקיה בינונית",
     "waterHigh": "השקיה מרובה",
+
     "sunFull": "שמש מלאה",
     "sunPartial": "צל חלקי",
     "sunShade": "צל מלא",
+
     "whatsappInquiry": "בירור זמינות בוואטסאפ",
     "backToCatalog": "חזרה לקטלוג",
     "water": "השקיה",
     "sunlight": "תאורה"
   },
+
   "catalog": {
-    "title": "קטלוג הצמחים",
+    "title": "קטלוג צמחים",
     "searchPlaceholder": "חיפוש צמח לפי שם...",
     "allCategories": "כל הקטגוריות",
+
     "sortNewest": "החדשים ביותר",
     "sortNameAsc": "שם: א-ת",
     "sortNameDesc": "שם: ת-א",
     "sortPriceAsc": "מחיר: מהנמוך לגבוה",
     "sortPriceDesc": "מחיר: מהגבוה לנמוך",
+
     "empty": "לא נמצאו צמחים",
-    "emptyDesc": "נסו לשנות את החיפוש או הסינון",
+    "emptyDesc": "נסו לשנות את החיפוש או את הסינון",
+
     "prev": "הקודם",
     "next": "הבא",
-    "pageOf": "עמוד {{page}} מתוך {{pages}}"
+    "pageOf": "עמוד {{page}} מתוך {{pages}}",
+    "pagination": "ניווט בין דפי הקטלוג"
   },
+
   "gallery": {
     "title": "גלריה",
-    "tabAll": "הכל",
+    "tabAll": "הכול",
     "tabNursery": "המשתלה",
     "tabBeforeAfter": "עיצוב גינות",
     "tabEvents": "אירועים",
-    "empty": "אין עדיין תמונות בקטגוריה זו"
+    "empty": "אין תמונות בקטגוריה זו עדיין"
   },
-  "services": {
-    "title": "השירותים שלנו",
-    "subtitle": "[תוכן זמני — יעודכן עם פרטי השירותים המדויקים של הלקוח]"
-  },
+
   "about": {
     "title": "אודות המשתלה",
-    "fallback": "[טקסט זמני — יוחלף בתוכן אמיתי על ידי הלקוח]"
+    "fallback": "[טקסט זמני — יוחלף בתוכן אמיתי מהלקוח]"
   },
+
+  "services": {
+    "title": "השירותים שלנו",
+    "subtitle": "אנו מציעים לכם את כל מה שאתם צריכים לבחירת צמחים, לטיפוחם ולעיצוב החללים סביבכם.",
+
+    "catalogTitle": "צמחים ופרחים",
+    "catalogDescription": "מבחר מגוון של צמחי נוי לבית ולחוץ, פרחים ועצים המתאימים למגוון חללים וסגנונות.",
+
+    "gardenTitle": "עיצוב וייעוץ לגינות",
+    "gardenDescription": "אנו עוזרים לכם לבחור את הצמחים המתאימים, לתכנן את החלל ולעצב גינות ומרפסות בצורה יפה ומעשית.",
+
+    "potsTitle": "עציצים ואביזרים",
+    "potsDescription": "מבחר עציצים וכלי שתילה בגדלים ובעיצובים שונים, להשלמת המראה ולהתאמה לעיצוב המקום.",
+
+    "gardeningTitle": "מוצרי גינון",
+    "gardeningDescription": "מגוון מוצרי טיפוח לצמחים, כולל אדמה, דשנים וכלי גינון שיעזרו לכם לשמור על צמחים בריאים ויפים."
+  },
+
   "contact": {
     "title": "צור קשר",
     "detailsTitle": "פרטי התקשרות",
     "formTitle": "שלחו לנו הודעה",
     "whatsappCta": "שלחו הודעה בוואטסאפ",
+
     "form": {
-      "name": "שם מלא",
+      "name": "שם",
+      "namePlaceholder": "השם שלך",
+
       "phone": "טלפון",
-      "email": "אימייל (אופציונלי)",
+      "phonePlaceholder": "05X-XXX-XXXX",
+
+      "email": "אימייל",
+      "emailPlaceholder": "example@email.com",
+
       "message": "הודעה",
+      "messagePlaceholder": "כתבו לנו כיצד נוכל לעזור לכם...",
+
       "submit": "שליחה",
       "sending": "שולח...",
-      "successTitle": "תודה על פנייתכם!",
+
+      "successTitle": "תודה שפניתם אלינו!",
       "successBody": "ניצור איתכם קשר בהקדם.",
       "sendAnother": "שליחת הודעה נוספת"
     }
   },
+
   "footer": {
-    "contact": "יצירת קשר",
-    "hours": "שעות פתיחה",
-    "hoursSoon": "שעות פתיחה יעודכנו בקרוב"
+    "brandName": "משתלת אל-יסמין",
+    "description": "מבחר רחב של צמחים, פרחים, עצים ומוצרי גינון לעיצוב החללים שלכם ולטיפוחם.",
+    "location": "משתלת אל-יסמין — ג׳ת",
+    "navigation": "קישורים באתר",
+    "contact": "צרו קשר",
+    "phoneFallback": "054-664-3896",
+    "addressFallback": "ג׳ת, ישראל",
+    "hours": "שעות פעילות",
+    "hoursSoon": "שעות הפעילות יעודכנו בקרוב",
+    "copyright": "משתלת אל-יסמין",
+    "days": {
+      "sunday": "ראשון",
+      "monday": "שני",
+      "tuesday": "שלישי",
+      "wednesday": "רביעי",
+      "thursday": "חמישי",
+      "friday": "שישי",
+      "saturday": "שבת"
+    }
   },
+
   "notFound": {
     "title": "404 — הדף לא נמצא",
-    "desc": "בדקו את הכתובת ונסו שוב."
+    "desc": "בדקו את הקישור ונסו שוב."
   },
+
   "admin": {
     "login": {
       "title": "כניסת מנהל",
-      "subtitle": "משתלת אליאסמין — לוח ניהול",
+      "subtitle": "משתלת אל-יסמין — לוח ניהול",
       "username": "שם משתמש",
       "password": "סיסמה",
-      "submit": "התחברות",
+      "submit": "כניסה",
       "submitting": "מתחבר...",
-      "error": "שם משתמש או סיסמה שגויים"
+      "error": "שם המשתמש או הסיסמה שגויים"
     },
+
     "sidebar": {
-      "title": "ניהול משתלה",
+      "title": "ניהול המשתלה",
       "dashboard": "לוח בקרה",
       "plants": "צמחים",
       "categories": "קטגוריות",
       "gallery": "גלריה",
       "content": "תוכן האתר",
       "messages": "הודעות",
-      "logout": "התנתקות"
+      "navigation": "ניווט בלוח הניהול",
+      "logout": "התנתקות",
+      "openMenu": "פתיחת תפריט",
+      "closeMenu": "סגירת תפריט"
+    },
+    "content": {
+      "pageTitle": "ניהול תוכן האתר",
+      "pageDescription": "ניהול תוכן דף הבית, מבצעים וחוות דעת של לקוחות",
+
+      "tabs": {
+        "homepage": "דף הבית",
+        "offers": "מבצעים",
+        "testimonials": "חוות דעת"
+      },
+
+      "tabsLabel": "חלקי תוכן האתר",
+
+      "homepage": {
+        "heroSection": "החלק הראשי",
+        "heroTitleHe": "כותרת ראשית (עברית)",
+        "heroTitleAr": "כותרת ראשית (ערבית)",
+        "heroSubtitleHe": "תיאור ראשי (עברית)",
+        "heroSubtitleAr": "תיאור ראשי (ערבית)",
+        "heroImage": "תמונה ראשית",
+
+        "aboutSection": "אודות המשתלה",
+        "aboutTextHe": "טקסט אודות (עברית)",
+        "aboutTextAr": "טקסט אודות (ערבית)",
+
+        "contactSection": "פרטי קשר",
+        "phone": "מספר טלפון",
+        "whatsapp": "מספר WhatsApp",
+        "address": "כתובת",
+
+        "openingHoursSection": "שעות פעילות",
+        "day": "יום",
+        "open": "שעת פתיחה",
+        "close": "שעת סגירה",
+
+        "days": {
+          "sunday": "ראשון",
+          "monday": "שני",
+          "tuesday": "שלישי",
+          "wednesday": "רביעי",
+          "thursday": "חמישי",
+          "friday": "שישי",
+          "saturday": "שבת"
+        },
+
+        "socialSection": "קישורים לרשתות חברתיות",
+        "instagram": "Instagram",
+        "facebook": "Facebook",
+        "tiktok": "TikTok",
+
+        "locationSection": "מיקום ודירוגים",
+        "googleRating": "דירוג Google",
+        "googleReviewCount": "מספר ביקורות Google",
+        "mapEmbedUrl": "קישור למפה",
+
+        "save": "שמירת השינויים",
+        "saveSuccess": "תוכן האתר עודכן בהצלחה",
+        "saveError": "עדכון תוכן האתר נכשל"
+      },
+
+      "offers": {
+        "add": "הוספת מבצע",
+        "addTitle": "הוספת מבצע חדש",
+        "editTitle": "עריכת מבצע",
+
+        "active": "פעיל",
+        "inactive": "לא פעיל",
+
+        "startDate": "תאריך התחלה",
+        "endDate": "תאריך סיום",
+
+        "edit": "עריכה",
+        "delete": "מחיקה",
+
+        "emptyTitle": "אין מבצעים עדיין",
+        "emptyDescription": "לחצו על «הוספת מבצע» כדי להתחיל",
+
+        "createSuccess": "המבצע נוסף בהצלחה",
+        "createError": "הוספת המבצע נכשלה",
+
+        "updateSuccess": "המבצע עודכן בהצלחה",
+        "updateError": "עדכון המבצע נכשל",
+
+        "deleteConfirmation": "האם למחוק את המבצע? לא ניתן לבטל פעולה זו.",
+        "deleteSuccess": "המבצע נמחק",
+        "deleteError": "מחיקת המבצע נכשלה"
+      },
+
+      "testimonials": {
+        "add": "הוספת חוות דעת",
+        "addTitle": "הוספת חוות דעת חדשה",
+        "editTitle": "עריכת חוות דעת",
+
+        "visible": "מוצג",
+        "hidden": "מוסתר",
+
+        "ratingLabel": "דירוג",
+
+        "edit": "עריכה",
+        "delete": "מחיקה",
+
+        "emptyTitle": "אין חוות דעת עדיין",
+        "emptyDescription": "לחצו על «הוספת חוות דעת» כדי להתחיל",
+
+        "createSuccess": "חוות הדעת נוספה בהצלחה",
+        "createError": "הוספת חוות הדעת נכשלה",
+
+        "updateSuccess": "חוות הדעת עודכנה בהצלחה",
+        "updateError": "עדכון חוות הדעת נכשל",
+
+        "deleteConfirmation": "האם למחוק את חוות הדעת? לא ניתן לבטל פעולה זו.",
+        "deleteSuccess": "חוות הדעת נמחקה",
+        "deleteError": "מחיקת חוות הדעת נכשלה"
+      },
+
+      "offerForm": {
+        "titleHe": "כותרת (עברית)",
+        "titleAr": "כותרת (ערבית)",
+        "descriptionHe": "תיאור (עברית)",
+        "descriptionAr": "תיאור (ערבית)",
+        "startDate": "תאריך התחלה",
+        "endDate": "תאריך סיום",
+        "isActive": "המבצע פעיל",
+        "image": "תמונת המבצע",
+        "update": "עדכון המבצע",
+        "create": "הוספת המבצע",
+        "cancel": "ביטול"
+      },
+
+      "testimonialForm": {
+        "customerName": "שם הלקוח",
+        "rating": "דירוג",
+        "textHe": "חוות דעת (עברית)",
+        "textAr": "חוות דעת (ערבית)",
+        "isVisible": "הצג את חוות הדעת באתר",
+        "update": "עדכון חוות הדעת",
+        "create": "הוספת חוות הדעת",
+        "cancel": "ביטול"
+      }
+    },
+    "categories": {
+      "pageTitle": "ניהול קטגוריות",
+      "add": "הוספת קטגוריה",
+      "addTitle": "הוספת קטגוריה חדשה",
+      "editTitle": "עריכת קטגוריה",
+      "createSuccess": "הקטגוריה נוספה בהצלחה",
+      "createError": "הוספת הקטגוריה נכשלה",
+      "updateSuccess": "הקטגוריה עודכנה בהצלחה",
+      "updateError": "עדכון הקטגוריה נכשל",
+      "deleteConfirmation": "האם למחוק את הקטגוריה? לא ניתן לבטל פעולה זו.",
+      "deleteSuccess": "הקטגוריה נמחקה",
+      "deleteError": "מחיקת הקטגוריה נכשלה",
+      "emptyTitle": "אין עדיין קטגוריות",
+      "emptyDescription": "לחצו על «הוספת קטגוריה» כדי להתחיל",
+      "edit": "עריכה",
+      "delete": "מחיקה",
+      "form": {
+        "nameHebrew": "שם הקטגוריה בעברית",
+        "nameArabic": "اسم הקטגוריה בערבית",
+        "slug": "Slug (מזהה כתובת URL)",
+        "slugPlaceholder": "e.g. indoor-plants",
+        "descriptionHebrew": "תיאור בעברית (אופציונלי)",
+        "descriptionArabic": "תיאור בערבית (אופציונלי)",
+        "image": "תמונת קטגוריה",
+        "update": "עדכון קטגוריה",
+        "create": "הוספת קטגוריה"
+      }
+    },
+    "messages": {
+      "pageTitle": "הודעות פנייה",
+      "tabs": {
+        "all": "הכל"
+      },
+      "status": {
+        "new": "חדש",
+        "read": "נקרא",
+        "resolved": "טופל"
+      },
+      "table": {
+        "name": "שם",
+        "phone": "טלפון",
+        "message": "הודעה",
+        "status": "סטטוס",
+        "date": "תאריך",
+        "actions": "פעולות"
+      },
+      "actions": {
+        "viewMessage": "הצג הודעה",
+        "markRead": "סמן כנקרא",
+        "markResolved": "סמן כטופל",
+        "delete": "מחיקה"
+      },
+      "viewTitle": "פרטי ההודעה",
+      "statusUpdateSuccess": "הסטטוס עודכן",
+      "statusUpdateError": "העדכון נכשל",
+      "deleteConfirmation": "למחוק את ההודעה?",
+      "deleteSuccess": "ההודעה נמחקה",
+      "deleteError": "המחיקה נכשלה",
+      "emptyTitle": "אין הודעות"
+    },
+    "plants": {
+      "title": "ניהול צמחים",
+      "add": "הוספת צמח",
+
+      "searchLabel": "חיפוש",
+      "searchPlaceholder": "חיפוש צמח...",
+
+      "visibilityUpdated": "הסטטוס עודכן",
+      "visibilityUpdateFailed": "עדכון הסטטוס נכשל",
+
+      "deleteConfirm": "האם למחוק את הצמח? לא ניתן לבטל פעולה זו.",
+      "deleted": "הצמח נמחק",
+      "deleteFailed": "מחיקת הצמח נכשלה",
+
+      "emptyTitle": "אין צמחים עדיין",
+      "emptyDescription": "לחצו על «הוספת צמח» כדי להתחיל",
+
+      "table": {
+        "image": "תמונה",
+        "name": "שם",
+        "price": "מחיר",
+        "availability": "זמינות",
+        "status": "סטטוס",
+        "actions": "פעולות",
+
+        "hidden": "מוסתר",
+        "visible": "גלוי",
+
+        "edit": "עריכה",
+        "show": "הצג",
+        "hide": "הסתר",
+        "delete": "מחיקה"
+      }
+    },
+
+    "plantEditor": {
+      "editTitle": "עריכת צמח",
+      "createTitle": "הוספת צמח חדש",
+      "updateSuccess": "הצמח עודכן בהצלחה",
+      "createSuccess": "הצמח נוסף בהצלחה",
+      "saveFailed": "השמירה נכשלה"
+    },
+
+    "plantForm": {
+      "nameHe": "שם הצמח (עברית)",
+      "nameAr": "שם הצמח (ערבית)",
+
+      "scientificName": "שם מדעי (אופציונלי)",
+
+      "slug": "Slug (מזהה כתובת URL)",
+      "slugPlaceholder": "e.g. monstera-deliciosa",
+
+      "descriptionHe": "תיאור (עברית)",
+      "descriptionAr": "תיאור (ערבית)",
+
+      "category": "קטגוריה",
+
+      "price": "מחיר (₪, אופציונלי)",
+
+      "availability": "זמינות",
+      "availabilityInStock": "במלאי",
+      "availabilityLowStock": "מלאי מוגבל",
+      "availabilityOutOfStock": "אזל מהמלאי",
+
+      "water": "צורכי השקיה",
+      "waterLow": "השקיה מועטה",
+      "waterMedium": "השקיה בינונית",
+      "waterHigh": "השקיה מרובה",
+
+      "sunlight": "צורכי תאורה",
+      "sunlightFullSun": "שמש מלאה",
+      "sunlightPartialShade": "צל חלקי",
+      "sunlightFullShade": "צל מלא",
+
+      "featured": "הצג בעמוד הבית (צמח נבחר)",
+
+      "images": "תמונות",
+      "removingImage": "מסיר את התמונה...",
+      "imagesDescription": "התמונה הראשונה ברשימה היא זו שמוצגת בכרטיס הצמח ובקטלוג. כדי להחליף אותה, הסירו אותה קודם ואז העלו את התמונה החדשה.",
+
+      "imageRemoved": "התמונה הוסרה בהצלחה",
+      "imageRemoveFailed": "הסרת התמונה נכשלה",
+
+      "update": "עדכון צמח",
+      "create": "הוספת צמח"
+    },
+
+    "gallery": {
+      "pageTitle": "ניהול גלריה",
+      "pageDescription": "הוספה, עריכה וניהול של תמונות הגלריה",
+
+      "itemsTitle": "תמונות הגלריה",
+      "itemsDescription": "ניהול הפריטים והתמונות המוצגים בגלריה",
+      "itemCount": "{{count}} פריטים",
+      "imageCount": "{{count}} תמונות",
+
+      "addTitle": "הוספה לגלריה",
+      "addDescription": "הוספת קבוצת תמונות חדשה לגלריה",
+
+      "editTitle": "עריכת פריט בגלריה",
+      "editDescription": "עריכת פרטי הפריט וניהול התמונות שלו",
+
+      "titleHebrew": "כותרת בעברית",
+      "titleArabic": "כותרת בערבית",
+
+      "category": "קטגוריה",
+
+      "categories": {
+        "nursery": "המשתלה",
+        "beforeAfter": "עיצוב גינות",
+        "events": "אירועים"
+      },
+
+      "images": "תמונות",
+      "imagesDescription": "בחרו תמונה אחת או יותר להעלאה לגלריה",
+
+      "currentImages": "תמונות קיימות",
+      "currentImagesDescription": "ניתן למחוק כל תמונה בנפרד",
+      "noImages": "אין תמונות כרגע",
+
+      "replaceImages": "החלפת תמונות",
+      "replaceImagesDescription": "בחירת תמונות חדשות תחליף את כל התמונות הקיימות של פריט זה",
+      "replacementSelected": "נבחרו {{count}} תמונות להחלפה",
+
+      "uploadArea": "אזור העלאת תמונות",
+      "chooseImages": "בחרו תמונות או גררו אותן לכאן",
+      "dropImages": "שחררו את התמונות כאן",
+      "uploadHint": "JPEG, PNG או WebP — עד 5MB לתמונה",
+      "multipleImages": "ניתן לבחור מספר תמונות",
+      "singleImage": "ניתן לבחור תמונה אחת",
+
+      "selectedImages": "תמונות שנבחרו",
+      "newImages": "{{count}} תמונות חדשות",
+      "existing": "קיימות",
+      "new": "חדשות",
+
+      "invalidFileType": "סוג קובץ אינו נתמך: {{name}}",
+      "fileTooLarge": "הקובץ גדול מדי: {{name}}",
+
+      "removeImage": "מחיקת תמונה",
+
+      "upload": "העלאת תמונות",
+      "uploading": "מעלה תמונות...",
+
+      "saveChanges": "שמירת שינויים",
+      "saving": "שומר...",
+      "cancel": "ביטול",
+
+      "edit": "עריכה",
+      "delete": "מחיקה",
+
+      "selectAtLeastOneImage": "יש לבחור לפחות תמונה אחת",
+
+      "createSuccess": "התמונות נוספו לגלריה בהצלחה",
+      "createError": "לא ניתן להוסיף את התמונות לגלריה",
+
+      "updateSuccess": "פריט הגלריה עודכן בהצלחה",
+      "updateError": "לא ניתן לעדכן את פריט הגלריה",
+
+      "deleteConfirmation": "האם אתם בטוחים שברצונכם למחוק את פריט הגלריה כולו?",
+      "deleteSuccess": "פריט הגלריה נמחק בהצלחה",
+      "deleteError": "לא ניתן למחוק את פריט הגלריה",
+
+      "deleteImageConfirmation": "האם אתם בטוחים שברצונכם למחוק תמונה זו?",
+      "deleteImageSuccess": "התמונה נמחקה בהצלחה",
+      "deleteImageError": "לא ניתן למחוק את התמונה",
+
+      "empty": "אין פריטים בגלריה עדיין"
+    }
+  },
+
+  "dashboard": {
+    "title": "לוח בקרה",
+
+    "stats": {
+      "new": "חדש",
+
+      "plants": {
+        "label": "צמחים",
+        "description": "סך כל הצמחים במערכת"
+      },
+
+      "categories": {
+        "label": "קטגוריות",
+        "description": "קטגוריות פעילות"
+      },
+
+      "galleryImages": {
+        "label": "תמונות גלריה",
+        "description": "סך כל התמונות בגלריה"
+      },
+
+      "newMessages": {
+        "label": "הודעות חדשות",
+        "description": "ממתינות לקריאה"
+      }
     }
   }
 }

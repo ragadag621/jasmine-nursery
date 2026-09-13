@@ -3,9 +3,12 @@ import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useFetch } from '@/hooks/useFetch';
 import { fetchPlantBySlug } from '@/api/plants.api';
+import { fetchSiteContent } from '@/api/content.api';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/Card';
+import { Container } from '@/components/ui/Container';
 import { formatWhatsAppLink } from '@/utils/formatters';
 import { setPageMeta } from '@/utils/seo';
 import { Button } from '@/components/ui/Button';
@@ -20,6 +23,7 @@ export default function PlantDetailsPage() {
     () => fetchPlantBySlug(slug ?? ''),
     [slug]
   );
+  const { data: content } = useFetch(fetchSiteContent, []);
 
   useEffect(() => {
     if (plant) {
@@ -29,24 +33,24 @@ export default function PlantDetailsPage() {
 
   if (status === 'loading') {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-12 md:px-6">
-        <Skeleton className="mb-4 h-96 w-full rounded-2xl" />
+      <Container as="main" size="medium" className="py-[var(--space-section)]">
+        <Skeleton className="mb-4 h-96 w-full" radius="var(--radius-media)" />
         <Skeleton className="mb-2 h-8 w-1/2" />
         <Skeleton className="h-4 w-3/4" />
-      </main>
+      </Container>
     );
   }
 
   if (status === 'error' || !plant) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-12 md:px-6">
+      <Container as="main" size="medium" className="py-[var(--space-section)]">
         <ErrorState message={error ?? undefined} onRetry={refetch} />
         <div className="mt-4 text-center">
           <Link to="/plants" className="text-sm text-[var(--color-forest-700)] hover:underline">
             {t('plant.backToCatalog')}
           </Link>
         </div>
-      </main>
+      </Container>
     );
   }
 
@@ -71,12 +75,19 @@ export default function PlantDetailsPage() {
     full_shade: t('plant.sunShade'),
   }[plant.care.sunlight];
   const price = plant.price != null ? `₪${plant.price.toLocaleString('he-IL')}` : t('plant.priceOnRequest');
+  const whatsappHref = formatWhatsAppLink(
+    content?.whatsapp || content?.phone || '972546643896',
+    `שלום, מעוניין/ת ב${plant.name.he}`
+  );
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-14 md:px-6">
+    <Container as="main" size="medium" className="py-[var(--space-section)]">
       <div className="mb-10 grid gap-8 md:grid-cols-2">
         <div>
-          <div className="aspect-square overflow-hidden rounded-2xl bg-[var(--color-sage-100)] shadow-[var(--shadow-soft)]">
+          <div
+            className="aspect-square overflow-hidden bg-[var(--color-sage-100)] shadow-[var(--shadow-soft)]"
+            style={{ borderRadius: 'var(--radius-media)' }}
+          >
             <img
               src={images[activeImage]?.url}
               alt={plant.name[key]}
@@ -84,12 +95,15 @@ export default function PlantDetailsPage() {
             />
           </div>
           {images.length > 1 && (
-            <div className="mt-3 flex gap-2 overflow-x-auto">
+            <div className="mt-3 flex gap-2 overflow-x-auto" role="tablist" aria-label={plant.name[key]}>
               {images.map((img, i) => (
                 <button
                   key={i}
+                  role="tab"
+                  aria-selected={i === activeImage}
+                  aria-label={`${t('common.viewMore')} ${i + 1}`}
                   onClick={() => setActiveImage(i)}
-                  className={`h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition-colors ${
+                  className={`h-16 w-16 shrink-0 overflow-hidden rounded-[var(--radius-sm)] border-2 transition-colors ${
                     i === activeImage ? 'border-[var(--color-forest-700)]' : 'border-transparent'
                   }`}
                 >
@@ -111,7 +125,7 @@ export default function PlantDetailsPage() {
           <p className="font-display mb-5 text-2xl text-[var(--color-forest-700)]">{price}</p>
           <p className="mb-7 leading-relaxed text-[var(--color-ink-900)]">{plant.description[key]}</p>
 
-          <div className="mb-7 grid grid-cols-2 gap-4 rounded-2xl border border-[var(--color-sage-200)] p-5">
+          <Card className="mb-7 grid grid-cols-2 gap-4 p-5">
             <div>
               <p className="mb-1 text-xs text-[var(--color-ink-600)]">{t('plant.water')}</p>
               <p className="text-sm font-medium text-[var(--color-forest-800)]">{waterLabel}</p>
@@ -120,13 +134,9 @@ export default function PlantDetailsPage() {
               <p className="mb-1 text-xs text-[var(--color-ink-600)]">{t('plant.sunlight')}</p>
               <p className="text-sm font-medium text-[var(--color-forest-800)]">{sunLabel}</p>
             </div>
-          </div>
+          </Card>
 
-          <a
-            href={formatWhatsAppLink('972546643896', `שלום, מעוניין/ת ב${plant.name.he}`)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
             <Button size="lg" className="w-full">
               {t('plant.whatsappInquiry')}
             </Button>
@@ -137,6 +147,6 @@ export default function PlantDetailsPage() {
       <Link to="/plants" className="text-sm text-[var(--color-forest-700)] hover:underline">
         ← {t('plant.backToCatalog')}
       </Link>
-    </main>
+    </Container>
   );
 }

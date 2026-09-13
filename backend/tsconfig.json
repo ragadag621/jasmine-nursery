@@ -21,6 +21,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "server.ts"],
+  "include": ["src/**/*.ts", "server.ts", "src/tests/plant_API.test.ts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -1,66 +1,109 @@
 import dotenv from 'dotenv';
+import { z } from 'zod';
 
 dotenv.config();
 
-interface EnvConfig {
-  NODE_ENV: 'development' | 'production' | 'test';
-  PORT: number;
-  MONGODB_URI: string;
-  JWT_SECRET: string;
-  JWT_EXPIRES_IN: string;
-  COOKIE_NAME: string;
-  CLOUDINARY_CLOUD_NAME: string;
-  CLOUDINARY_API_KEY: string;
-  CLOUDINARY_API_SECRET: string;
-  CLIENT_URL: string;
-}
+const envSchema = z
+  .object({
+    NODE_ENV: z
+      .enum(['development', 'production', 'test'])
+      .default('development'),
 
-/**
- * Reads and validates required environment variables at startup.
- * Fails fast with a clear message rather than crashing deep in the app
- * the first time a missing variable is actually used.
- */
-function requireEnv(name: string): string {
-  const value = process.env[name];
-  if (!value || value.trim() === '') {
-    throw new Error(`Missing required environment variable: ${name}`);
-  }
-  return value;
-}
+    PORT: z.coerce
+      .number()
+      .int()
+      .min(1)
+      .max(65535)
+      .default(5000),
 
-function loadEnv(): EnvConfig {
-  const nodeEnv = (process.env.NODE_ENV as EnvConfig['NODE_ENV']) || 'development';
+    MONGODB_URI: z
+      .string()
+      .trim()
+      .min(1, 'MONGODB_URI is required'),
 
-  // In non-production environments we allow placeholder values so the
-  // server can boot for local scaffolding/testing before real secrets exist.
-  const isProd = nodeEnv === 'production';
+    JWT_SECRET: z
+      .string()
+      .trim()
+      .min(1, 'JWT_SECRET is required'),
 
-  const getRequiredOrPlaceholder = (name: string, placeholder: string): string => {
-    const value = process.env[name];
-    if (!value || value.trim() === '') {
-      if (isProd) {
-        return requireEnv(name); // throws
-      }
-      return placeholder;
+    JWT_EXPIRES_IN: z
+      .string()
+      .trim()
+      .min(1, 'JWT_EXPIRES_IN is required'),
+
+    COOKIE_NAME: z
+      .string()
+      .trim()
+      .min(1, 'COOKIE_NAME is required'),
+
+    CLOUDINARY_CLOUD_NAME: z
+      .string()
+      .trim()
+      .min(1, 'CLOUDINARY_CLOUD_NAME is required'),
+
+    CLOUDINARY_API_KEY: z
+      .string()
+      .trim()
+      .min(1, 'CLOUDINARY_API_KEY is required'),
+
+    CLOUDINARY_API_SECRET: z
+      .string()
+      .trim()
+      .min(1, 'CLOUDINARY_API_SECRET is required'),
+
+    CLIENT_URL: z
+      .string()
+      .trim()
+      .url('CLIENT_URL must be a valid URL'),
+  })
+  .superRefine((data, ctx) => {
+    if (data.NODE_ENV !== 'production') {
+      return;
     }
-    return value;
-  };
 
-  return {
-    NODE_ENV: nodeEnv,
-    PORT: Number(process.env.PORT) || 5000,
-    MONGODB_URI: getRequiredOrPlaceholder(
-      'MONGODB_URI',
-      'mongodb://localhost:27017/alyasmin-nursery-dev'
-    ),
-    JWT_SECRET: getRequiredOrPlaceholder('JWT_SECRET', 'dev-only-placeholder-secret-change-me'),
-    JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
-    COOKIE_NAME: process.env.COOKIE_NAME || 'alyasmin_admin_token',
-    CLOUDINARY_CLOUD_NAME: getRequiredOrPlaceholder('CLOUDINARY_CLOUD_NAME', 'placeholder'),
-    CLOUDINARY_API_KEY: getRequiredOrPlaceholder('CLOUDINARY_API_KEY', 'placeholder'),
-    CLOUDINARY_API_SECRET: getRequiredOrPlaceholder('CLOUDINARY_API_SECRET', 'placeholder'),
-    CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
-  };
+    let clientUrl: URL;
+
+    try {
+      clientUrl = new URL(data.CLIENT_URL);
+    } catch {
+      return;
+    }
+
+    if (clientUrl.protocol !== 'https:') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['CLIENT_URL'],
+        message: 'CLIENT_URL must use HTTPS in production',
+      });
+    }
+
+    const hostname = clientUrl.hostname.toLowerCase();
+
+    if (
+      hostname === 'localhost' ||
+      hostname === '127.0.0.1' ||
+      hostname === '0.0.0.0' ||
+      hostname === '::1'
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['CLIENT_URL'],
+        message:
+          'Development/local origins are not allowed in production',
+      });
+    }
+  });
+
+const result = envSchema.safeParse(process.env);
+
+if (!result.success) {
+  console.error('[env] Environment validation failed:');
+
+  for (const issue of result.error.issues) {
+    console.error(`- ${issue.path.join('.')}: ${issue.message}`);
+  }
+
+  process.exit(1);
 }
 
-export const env = loadEnv();
+export const env = result.data;

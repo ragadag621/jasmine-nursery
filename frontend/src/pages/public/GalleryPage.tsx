@@ -6,6 +6,8 @@ import { LightboxGallery } from '@/components/public/LightboxGallery';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorState } from '@/components/ui/ErrorState';
+import { Container } from '@/components/ui/Container';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { setPageMeta } from '@/utils/seo';
 
 export default function GalleryPage() {
@@ -26,17 +28,17 @@ export default function GalleryPage() {
   const { data: items, status, error, refetch } = useFetch(() => fetchGallery(category), [category]);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-14 md:px-6">
-      <h1 className="font-display mb-8 text-center text-3xl text-[var(--color-forest-800)] md:text-4xl">
-        {t('gallery.title')}
-      </h1>
+    <Container as="main" className="py-[var(--space-section)]">
+      <PageHeader title={t('gallery.title')} />
 
-      <div className="mb-10 flex justify-center gap-2 overflow-x-auto">
+      <div className="mb-10 flex justify-center gap-2 overflow-x-auto" role="tablist" aria-label={t('gallery.title')}>
         {CATEGORY_TABS.map((tab) => (
           <button
             key={tab.label}
+            role="tab"
+            aria-selected={category === tab.value}
             onClick={() => setCategory(tab.value)}
-            className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm transition-colors ${
+            className={`whitespace-nowrap rounded-[var(--radius-pill)] px-4 py-1.5 text-sm font-medium transition-colors ${
               category === tab.value
                 ? 'bg-[var(--color-forest-700)] text-white'
                 : 'bg-[var(--color-sage-100)] text-[var(--color-ink-600)] hover:bg-[var(--color-sage-200)]'
@@ -50,7 +52,7 @@ export default function GalleryPage() {
       {status === 'loading' && (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="aspect-square w-full rounded-2xl" />
+            <Skeleton key={i} className="aspect-square w-full" radius="var(--radius-media)" />
           ))}
         </div>
       )}
@@ -60,6 +62,6 @@ export default function GalleryPage() {
       {status === 'success' && (items?.length ?? 0) === 0 && <EmptyState title={t('gallery.empty')} />}
 
       {status === 'success' && items && items.length > 0 && <LightboxGallery items={items} />}
-    </main>
+    </Container>
   );
 }

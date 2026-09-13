@@ -14,9 +14,15 @@ import { User } from '../models';
 async function seedAdmin(): Promise<void> {
   await connectDB();
 
-  const username = (process.env.SEED_ADMIN_USERNAME || 'admin').toLowerCase();
-  const email = process.env.SEED_ADMIN_EMAIL || 'admin@alyasmin-nursery.local';
-  const password = process.env.SEED_ADMIN_PASSWORD || 'ChangeMe123!';
+  const username = process.env.SEED_ADMIN_USERNAME;
+  const email = process.env.SEED_ADMIN_EMAIL;
+  const password = process.env.SEED_ADMIN_PASSWORD;
+
+  if (!username || !email || !password) {
+    throw new Error(
+      '[seed] SEED_ADMIN_USERNAME, SEED_ADMIN_EMAIL, and SEED_ADMIN_PASSWORD are required.'
+    );
+  }
 
   const existing = await User.findOne({ username });
 
@@ -38,11 +44,7 @@ async function seedAdmin(): Promise<void> {
   console.log('[seed] Admin user created successfully:');
   console.log(`        username: ${username}`);
   console.log(`        email:    ${email}`);
-  if (!process.env.SEED_ADMIN_PASSWORD) {
-    console.log(`        password: ${password}  (DEV DEFAULT — set SEED_ADMIN_PASSWORD env var and re-seed for real use)`);
-  } else {
-    console.log('        password: (from SEED_ADMIN_PASSWORD env var)');
-  }
+  console.log('        password: (from SEED_ADMIN_PASSWORD env var)');
 
   await disconnectDB();
   process.exit(0);
