@@ -10,6 +10,13 @@ export type Availability = 'in_stock' | 'low_stock' | 'out_of_stock';
 export type WaterNeed = 'low' | 'medium' | 'high';
 export type SunlightNeed = 'full_sun' | 'partial_shade' | 'full_shade';
 
+export interface IPlantOffer {
+  enabled: boolean;
+  price?: number;
+  startDate?: Date;
+  endDate?: Date;
+}
+
 export interface IPlant {
   name: LocalizedText;
   scientificName?: string;
@@ -23,6 +30,7 @@ export interface IPlant {
     water: WaterNeed;
     sunlight: SunlightNeed;
   };
+  offer?: IPlantOffer;
   featured: boolean;
   isHidden: boolean;
 }
@@ -73,6 +81,16 @@ const plantSchema = new Schema<IPlantDocument>(
         enum: ['full_sun', 'partial_shade', 'full_shade'],
         required: true,
       },
+    },
+    offer: {
+      enabled: { type: Boolean, default: false },
+      price: {
+        type: Number,
+        min: 0,
+        required: false,
+      },
+      startDate: { type: Date },
+      endDate: { type: Date },
     },
     featured: { type: Boolean, default: false },
     isHidden: { type: Boolean, default: false },

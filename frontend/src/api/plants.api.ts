@@ -7,10 +7,18 @@ export function buildPlantFormData(values: PlantFormValues, files: File[]): Form
   formData.append('name', JSON.stringify({ he: values.nameHe, ar: values.nameAr }));
   formData.append('description', JSON.stringify({ he: values.descriptionHe, ar: values.descriptionAr }));
   formData.append('care', JSON.stringify({ water: values.water, sunlight: values.sunlight }));
-  formData.append('slug', values.slug);
   formData.append('category', values.category);
   formData.append('availability', values.availability);
   formData.append('featured', String(values.featured));
+  formData.append(
+    'offer',
+    JSON.stringify({
+      enabled: values.offerEnabled,
+      price: values.offerEnabled && values.offerPrice ? Number(values.offerPrice) : undefined,
+      startDate: values.offerEnabled && values.offerStartDate ? values.offerStartDate : undefined,
+      endDate: values.offerEnabled && values.offerEndDate ? values.offerEndDate : undefined,
+    })
+  );
   if (values.scientificName) formData.append('scientificName', values.scientificName);
   if (values.price) formData.append('price', values.price);
   files.forEach((file) => formData.append('images', file));

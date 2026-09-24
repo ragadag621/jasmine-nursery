@@ -31,7 +31,7 @@ router.post(
   verifyToken,
   requireAdmin,
   uploadMultipleImages,
-  parseJsonFields(['name', 'description', 'care']),
+  parseJsonFields(['name', 'description', 'care', 'offer']),
   validate(plantCreateSchema),
   createPlant
 );
@@ -41,7 +41,7 @@ router.put(
   verifyToken,
   requireAdmin,
   uploadMultipleImages,
-  parseJsonFields(['name', 'description', 'care']),
+  parseJsonFields(['name', 'description', 'care', 'offer']),
   validate(plantUpdateSchema),
   updatePlant
 );

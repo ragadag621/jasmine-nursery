@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 interface BadgeProps {
   children: ReactNode;
   variant?: 'success' | 'warning' | 'danger' | 'neutral';
+  className?: string;
 }
 
 const variantClasses: Record<NonNullable<BadgeProps['variant']>, string> = {
@@ -12,9 +13,9 @@ const variantClasses: Record<NonNullable<BadgeProps['variant']>, string> = {
   neutral: 'bg-[var(--color-sage-200)] text-[var(--color-ink-600)]',
 };
 
-export function Badge({ children, variant = 'neutral' }: BadgeProps) {
+export function Badge({ children, variant = 'neutral', className = '' }: BadgeProps) {
   return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${variantClasses[variant]}`}>
+    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${variantClasses[variant]} ${className}`.trim()}>
       {children}
     </span>
   );

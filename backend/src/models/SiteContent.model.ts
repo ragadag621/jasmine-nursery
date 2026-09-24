@@ -17,9 +17,12 @@ const openingHourSchema = new Schema<IOpeningHour>(
 );
 
 export interface ISiteContent {
+  singletonKey?: string;
+  siteName: LocalizedText;
   heroTitle: LocalizedText;
   heroSubtitle: LocalizedText;
   heroImage?: ImageRef;
+  logo?: ImageRef;
   aboutText: LocalizedText;
   phone: string;
   whatsapp: string;
@@ -49,9 +52,21 @@ interface ISiteContentModel extends Model<ISiteContentDocument> {
  */
 const siteContentSchema = new Schema<ISiteContentDocument>(
   {
+    singletonKey: {
+      type: String,
+      unique: true,
+      default: 'main',
+      select: false,
+    },
+    siteName: {
+      type: localizedTextSchema,
+      required: true,
+      default: { he: 'משתלת אליאסמין', ar: 'مشتل الياسمين' },
+    },
     heroTitle: { type: localizedTextSchema, required: true },
     heroSubtitle: { type: localizedTextSchema, required: true },
     heroImage: { type: imageRefSchema, required: false },
+    logo: { type: imageRefSchema, required: false },
     aboutText: { type: localizedTextSchema, required: true },
     phone: { type: String, required: true },
     whatsapp: { type: String, required: true },
@@ -70,30 +85,55 @@ const siteContentSchema = new Schema<ISiteContentDocument>(
 );
 
 siteContentSchema.statics.getSingleton = async function (): Promise<ISiteContentDocument> {
-  let doc = await this.findOne();
-  if (!doc) {
-    // Bootstrap with clearly-labeled placeholder content the first time
-    // the app runs against an empty database (e.g. right after seeding).
-    doc = await this.create({
-      heroTitle: { he: 'משתלת אליאסמין', ar: 'مشتل الياسمين' },
-      heroSubtitle: {
-        he: '[טקסט זמני] מגוון עצום של צמחים, פרחים ועצים',
-        ar: '[نص مؤقت] مجموعة واسعة من النباتات والزهور والأشجار',
-      },
-      aboutText: {
-        he: '[טקסט זמני — יוחלף בתוכן אמיתי על ידי הלקוח]',
-        ar: '[نص مؤقت — سيتم استبداله بمحتوى حقيقي من العميل]',
-      },
-      phone: '054-664-3896',
-      whatsapp: '972546643896',
-      address: "ג'ת, ישראל [כתובת מדויקת תתעדכן]",
-      openingHours: [],
-      socialLinks: {},
-      googleRating: 4.6,
-      googleReviewCount: 225,
-    });
+  const defaults = {
+    singletonKey: 'main',
+    heroTitle: { he: 'משתלת אליאסמין', ar: 'مشتل الياسمين' },
+    siteName: { he: 'משתלת אליאסמין', ar: 'مشتل الياسمين' },
+    heroSubtitle: {
+      he: '[טקסט זמני] מגוון עצום של צמחים, פרחים ועצים',
+      ar: '[نص مؤقت] مجموعة واسعة من النباتات والزهور والأشجار',
+    },
+    aboutText: {
+      he: '[טקסט זמני — יוחלף בתוכן אמיתי על ידי הלקוח]',
+      ar: '[نص مؤقت — سيتم استبداله بمحتوى حقيقي من العميل]',
+    },
+    phone: '054-664-3896',
+    whatsapp: '972546643896',
+    address: "ג'ת, ישראל [כתובת מדויקת תתעדכן]",
+    openingHours: [],
+    socialLinks: {},
+    googleRating: 4.6,
+    googleReviewCount: 225,
+  };
+
+  const existing = await this.findOne();
+
+  if (existing) {
+    if (!existing.siteName) {
+      existing.siteName = defaults.siteName;
+      await existing.save();
+    }
+
+    return existing;
   }
-  return doc;
+
+  try {
+    return await this.findOneAndUpdate(
+      { singletonKey: 'main' },
+      { $setOnInsert: defaults },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+  } catch (error: any) {
+    if (error?.code === 11000) {
+      const concurrentDocument = await this.findOne();
+
+      if (concurrentDocument) {
+        return concurrentDocument;
+      }
+    }
+
+    throw error;
+  }
 };
 
 export const SiteContent = model<ISiteContentDocument, ISiteContentModel>(

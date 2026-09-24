@@ -19,7 +19,9 @@ export const testimonialCreateSchema = z.object({
 export const testimonialUpdateSchema = z.object({
   body: testimonialCreateSchema.shape.body.partial(),
   query: z.object({}).optional(),
-  params: z.object({ id: z.string().trim().min(1) }),
+  params: z.object({
+    id: z.string().trim().regex(/^[0-9a-fA-F]{24}$/, 'Invalid testimonial ID'),
+  }),
 });
 
 export type TestimonialCreateInput = z.infer<typeof testimonialCreateSchema>['body'];

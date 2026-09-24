@@ -19,6 +19,21 @@ export function PlantCard({ plant }: PlantCardProps) {
     plant.images[0]?.url ||
     '/placeholders/plant-placeholder.svg';
 
+  const isOfferActive = (() => {
+    if (!plant.offer?.enabled || plant.offer.price == null) return false;
+
+    const now = new Date();
+    const startDate = plant.offer.startDate ? new Date(plant.offer.startDate) : null;
+    const endDate = plant.offer.endDate ? new Date(plant.offer.endDate) : null;
+
+    if (startDate && startDate > now) return false;
+    if (endDate && endDate < now) return false;
+
+    return true;
+  })();
+
+  const currentPrice = isOfferActive ? plant.offer?.price : null;
+
   const availabilityVariant =
     plant.availability === 'in_stock'
       ? 'success'
@@ -37,6 +52,9 @@ export function PlantCard({ plant }: PlantCardProps) {
     plant.price != null
       ? `₪${plant.price.toLocaleString('he-IL')}`
       : t('plant.priceOnRequest');
+
+  const discountedPrice =
+    currentPrice != null ? `₪${currentPrice.toLocaleString('he-IL')}` : null;
 
   return (
     <Link
@@ -125,19 +143,34 @@ export function PlantCard({ plant }: PlantCardProps) {
             {plant.description[key]}
           </p>
 
-          <p
+          <div
             dir="ltr"
             className="
               mt-auto
+              flex
+              flex-col
+              items-start
+              gap-1
               pt-3
-              font-display
-              text-base
-              text-[var(--color-forest-700)]
-              sm:text-lg
             "
           >
-            {price}
-          </p>
+            {isOfferActive && discountedPrice && (
+              <>
+                <span className="text-xs text-[var(--color-ink-500)] line-through">
+                  {price}
+                </span>
+                <span className="font-display text-base text-[var(--color-forest-700)] sm:text-lg">
+                  {discountedPrice}
+                </span>
+              </>
+            )}
+
+            {!isOfferActive && (
+              <span className="font-display text-base text-[var(--color-forest-700)] sm:text-lg">
+                {price}
+              </span>
+            )}
+          </div>
         </div>
       </Card>
     </Link>

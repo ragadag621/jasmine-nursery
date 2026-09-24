@@ -34,6 +34,8 @@ export default function MessagesPage() {
     undefined,
   )
 
+  const [page, setPage] = useState(1)
+
   const { showToast } = useToast()
 
   useEffect(() => {
@@ -44,9 +46,10 @@ export default function MessagesPage() {
     () =>
       fetchContactMessages({
         status: statusFilter,
+        page,
         limit: 50,
       }),
-    [statusFilter],
+    [statusFilter, page],
   )
 
   const handleStatusChange = async (id: string, newStatus: ContactStatus) => {
@@ -113,7 +116,10 @@ export default function MessagesPage() {
             <button
               key={statusValue ?? "all"}
               type="button"
-              onClick={() => setStatusFilter(statusValue)}
+              onClick={() => {
+                setStatusFilter(statusValue)
+                setPage(1)
+              }}
               className={`
                 min-h-9
                 shrink-0
@@ -164,11 +170,37 @@ export default function MessagesPage() {
       )}
 
       {status === "success" && data && data.messages.length > 0 && (
-        <MessagesTable
-          messages={data.messages}
-          onStatusChange={handleStatusChange}
-          onDelete={handleDelete}
-        />
+        <>
+          <MessagesTable
+            messages={data.messages}
+            onStatusChange={handleStatusChange}
+            onDelete={handleDelete}
+          />
+
+          {data.meta.pages > 1 && (
+            <div className="mt-4 flex items-center justify-center gap-3">
+              <button
+                type="button"
+                className="min-h-10 rounded-lg border border-[var(--color-border)] px-3 text-sm disabled:opacity-50"
+                disabled={page <= 1}
+                onClick={() => setPage((current) => current - 1)}
+              >
+                {t("catalog.prev")}
+              </button>
+              <span className="text-sm text-[var(--color-ink-600)]">
+                {t("catalog.pageOf", { page: data.meta.page, pages: data.meta.pages })}
+              </span>
+              <button
+                type="button"
+                className="min-h-10 rounded-lg border border-[var(--color-border)] px-3 text-sm disabled:opacity-50"
+                disabled={page >= data.meta.pages}
+                onClick={() => setPage((current) => current + 1)}
+              >
+                {t("catalog.next")}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   )

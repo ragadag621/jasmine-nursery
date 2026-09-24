@@ -12,12 +12,13 @@ import { asyncHandler } from '../utils/asyncHandler';
  */
 export const getDashboardStats = asyncHandler(
   async (_req: Request, res: Response) => {
-    const [plantCount, categoryCount, galleryItems, newMessageCount] =
+    const [plantCount, categoryCount, galleryItems, newMessageCount, totalMessageCount] =
       await Promise.all([
         Plant.countDocuments({}),
         Category.countDocuments({}),
         Gallery.find({}, 'images'),
         Contact.countDocuments({ status: 'new' }),
+        Contact.countDocuments({}),
       ]);
 
     const galleryImageCount = galleryItems.reduce(
@@ -32,6 +33,7 @@ export const getDashboardStats = asyncHandler(
         categories: categoryCount,
         galleryImages: galleryImageCount,
         newMessages: newMessageCount,
+        totalMessages: totalMessageCount,
       },
     });
   }

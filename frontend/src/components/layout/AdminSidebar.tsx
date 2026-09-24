@@ -3,6 +3,8 @@ import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '@/hooks/useAuth';
+import { useFetch } from '@/hooks/useFetch';
+import { fetchSiteContent } from '@/api/content.api';
 
 import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -149,6 +151,8 @@ const ADMIN_ICONS = [
 export function AdminSidebar() {
   const { logout, admin } = useAuth();
   const { t, i18n } = useTranslation();
+  const { data: content } = useFetch(fetchSiteContent, []);
+  const language = i18n.language.startsWith('ar') ? 'ar' : 'he';
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -284,12 +288,9 @@ export function AdminSidebar() {
         "
       >
         <div className="flex min-w-0 items-center gap-2.5">
-          <img
-            src="/placeholders/hero-placeholder.svg"
-            alt=""
-            aria-hidden="true"
-            className="h-9 w-9 shrink-0 object-contain"
-          />
+          {content?.logo?.url && (
+            <img src={content.logo.url} alt="" aria-hidden="true" className="h-9 w-9 shrink-0 object-contain" />
+          )}
 
           <div className="min-w-0">
             <p
@@ -300,7 +301,7 @@ export function AdminSidebar() {
                 text-[var(--color-forest-800)]
               "
             >
-              {t('admin.sidebar.title')}
+              {content?.siteName?.[language] ?? ''}
             </p>
 
             {admin && (
@@ -400,12 +401,9 @@ export function AdminSidebar() {
           "
         >
           <div className="flex min-w-0 items-center gap-2.5">
-            <img
-              src="/placeholders/hero-placeholder.svg"
-              alt=""
-              aria-hidden="true"
-              className="h-9 w-9 shrink-0 object-contain"
-            />
+            {content?.logo?.url && (
+              <img src={content.logo.url} alt="" aria-hidden="true" className="h-9 w-9 shrink-0 object-contain" />
+            )}
 
             <div className="min-w-0">
               <p
@@ -416,7 +414,7 @@ export function AdminSidebar() {
                   text-[var(--color-forest-800)]
                 "
               >
-                {t('admin.sidebar.title')}
+                {content?.siteName?.[language] ?? ''}
               </p>
 
               {admin && (
@@ -540,12 +538,9 @@ export function AdminSidebar() {
             pb-4
           "
         >
-          <img
-            src="/placeholders/hero-placeholder.svg"
-            alt=""
-            aria-hidden="true"
-            className="h-9 w-9 shrink-0 object-contain"
-          />
+          {content?.logo?.url && (
+            <img src={content.logo.url} alt="" aria-hidden="true" className="h-9 w-9 shrink-0 object-contain" />
+          )}
 
           <div className="min-w-0">
             <p
@@ -556,7 +551,7 @@ export function AdminSidebar() {
                 text-[var(--color-forest-800)]
               "
             >
-              {t('admin.sidebar.title')}
+              {content?.siteName?.[language] ?? ''}
             </p>
 
             {admin && (

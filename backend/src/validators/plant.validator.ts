@@ -5,6 +5,29 @@ const localizedTextSchema = z.object({
   ar: z.string().trim().min(1, 'Arabic text is required'),
 });
 
+const plantOfferSchema = z.object({
+  enabled: z.coerce.boolean().default(false),
+  price: z.coerce.number().min(0).optional(),
+  startDate: z.coerce.date().optional(),
+  endDate: z.coerce.date().optional(),
+}).superRefine((offer, ctx) => {
+  if (offer.enabled && !offer.price) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['price'],
+      message: 'Offer price is required when the offer is enabled',
+    });
+  }
+
+  if (offer.startDate && offer.endDate && offer.endDate < offer.startDate) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['endDate'],
+      message: 'End date must be after start date',
+    });
+  }
+});
+
 export const plantCreateSchema = z.object({
   body: z.object({
     name: localizedTextSchema,
@@ -13,7 +36,8 @@ export const plantCreateSchema = z.object({
       .string()
       .trim()
       .toLowerCase()
-      .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+      .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens')
+      .optional(),
     description: localizedTextSchema,
     category: z.string().trim().min(1, 'Category is required'),
     price: z.coerce.number().min(0).optional(),
@@ -22,6 +46,7 @@ export const plantCreateSchema = z.object({
       water: z.enum(['low', 'medium', 'high']),
       sunlight: z.enum(['full_sun', 'partial_shade', 'full_shade']),
     }),
+    offer: plantOfferSchema.optional(),
     featured: z.coerce.boolean().optional().default(false),
   }),
   query: z.object({}).optional(),

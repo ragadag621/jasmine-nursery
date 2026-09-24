@@ -46,7 +46,7 @@ export function AboutPreview({ content }: AboutPreviewProps) {
       </p>
 
       <Link
-        to="/about"
+        to="/contact"
         className="
           mt-5
           inline-flex
@@ -64,7 +64,7 @@ export function AboutPreview({ content }: AboutPreviewProps) {
           hover:text-[var(--color-forest-900)]
         "
       >
-        <span>{t('home.aboutReadMore')}</span>
+        <span>{t('nav.contact')}</span>
         <span aria-hidden="true">←</span>
       </Link>
     </Section>

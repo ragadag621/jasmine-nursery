@@ -22,7 +22,6 @@ export interface PlantFormValues {
   nameHe: string;
   nameAr: string;
   scientificName: string;
-  slug: string;
   descriptionHe: string;
   descriptionAr: string;
   category: string;
@@ -31,6 +30,11 @@ export interface PlantFormValues {
   water: WaterNeed;
   sunlight: SunlightNeed;
   featured: boolean;
+
+  offerEnabled: boolean;
+  offerPrice: string;
+  offerStartDate: string;
+  offerEndDate: string;
 }
 
 interface PlantFormProps {
@@ -58,7 +62,6 @@ export function PlantForm({
       nameAr: initial?.name.ar ?? '',
       scientificName:
         initial?.scientificName ?? '',
-      slug: initial?.slug ?? '',
       descriptionHe:
         initial?.description.he ?? '',
       descriptionAr:
@@ -80,14 +83,25 @@ export function PlantForm({
         'partial_shade',
       featured:
         initial?.featured ?? false,
+
+      offerEnabled:
+        initial?.offer?.enabled ?? false,
+      offerPrice:
+        initial?.offer?.price?.toString() ?? '',
+      offerStartDate:
+        initial?.offer?.startDate
+          ? initial.offer.startDate.slice(0, 10)
+          : '',
+      offerEndDate:
+        initial?.offer?.endDate
+          ? initial.offer.endDate.slice(0, 10)
+          : '',
     });
 
   const [files, setFiles] = useState<File[]>(
     []
   );
 
-  // Local mirror of saved images so removing
-  // one updates the UI immediately.
   const [existingImages, setExistingImages] =
     useState(
       (initial?.images ?? [])
@@ -183,8 +197,8 @@ export function PlantForm({
         />
       </div>
 
-      {/* Scientific name + slug */}
-      <div className="grid gap-4 md:grid-cols-2">
+      {/* Scientific name */}
+      <div>
         <Input
           label={t(
             'admin.plantForm.scientificName'
@@ -201,22 +215,6 @@ export function PlantForm({
           autoComplete="off"
         />
 
-        <Input
-          label={t('admin.plantForm.slug')}
-          value={values.slug}
-          onChange={(e) =>
-            setValues({
-              ...values,
-              slug: e.target.value,
-            })
-          }
-          placeholder={t(
-            'admin.plantForm.slugPlaceholder'
-          )}
-          dir="ltr"
-          required
-          autoComplete="off"
-        />
       </div>
 
       {/* Descriptions */}
@@ -388,6 +386,142 @@ export function PlantForm({
           </select>
         </label>
       </div>
+
+      {/* Plant-specific offer */}
+      <section
+        className="
+          rounded-xl
+          border
+          border-[var(--color-sage-300)]
+          bg-[var(--color-cream-50)]
+          p-4
+          sm:p-5
+        "
+        aria-labelledby="plant-offer-title"
+      >
+        <div className="mb-4">
+          <h2
+            id="plant-offer-title"
+            className="
+              text-base
+              font-semibold
+              text-[var(--color-forest-800)]
+            "
+          >
+            {t('admin.plantForm.offerTitle')}
+          </h2>
+
+          <p
+            className="
+              mt-1
+              text-sm
+              leading-6
+              text-[var(--color-ink-600)]
+            "
+          >
+            {t(
+              'admin.plantForm.offerDescription'
+            )}
+          </p>
+        </div>
+
+        <label
+          htmlFor="plant-offer-enabled"
+          className="
+            flex
+            min-h-11
+            cursor-pointer
+            items-center
+            gap-3
+            rounded-lg
+            border
+            border-[var(--color-border)]
+            bg-[var(--color-cream-50)]
+            px-3
+            py-2.5
+            text-sm
+            text-[var(--color-ink-900)]
+          "
+        >
+          <input
+            id="plant-offer-enabled"
+            type="checkbox"
+            checked={values.offerEnabled}
+            onChange={(e) =>
+              setValues({
+                ...values,
+                offerEnabled:
+                  e.target.checked,
+              })
+            }
+            className="
+              h-4
+              w-4
+              shrink-0
+              accent-[var(--color-forest-700)]
+            "
+          />
+
+          <span>
+            {t(
+              'admin.plantForm.offerEnabled'
+            )}
+          </span>
+        </label>
+
+        {values.offerEnabled && (
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            <Input
+              label={t(
+                'admin.plantForm.offerPrice'
+              )}
+              type="number"
+              min="0"
+              step="any"
+              value={values.offerPrice}
+              onChange={(e) =>
+                setValues({
+                  ...values,
+                  offerPrice:
+                    e.target.value,
+                })
+              }
+              required
+              inputMode="decimal"
+            />
+
+            <Input
+              label={t(
+                'admin.plantForm.offerStartDate'
+              )}
+              type="date"
+              value={values.offerStartDate}
+              onChange={(e) =>
+                setValues({
+                  ...values,
+                  offerStartDate:
+                    e.target.value,
+                })
+              }
+            />
+
+            <Input
+              label={t(
+                'admin.plantForm.offerEndDate'
+              )}
+              type="date"
+              value={values.offerEndDate}
+              onChange={(e) =>
+                setValues({
+                  ...values,
+                  offerEndDate:
+                    e.target.value,
+                })
+              }
+            />
+          </div>
+        )}
+      </section>
 
       {/* Care requirements */}
       <div className="grid gap-4 md:grid-cols-2">

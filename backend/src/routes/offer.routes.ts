@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { listOffers, createOffer, updateOffer, deleteOffer } from '../controllers/offer.controller';
+import { listOffers, getOfferById, createOffer, updateOffer, deleteOffer } from '../controllers/offer.controller';
 import { validate } from '../middleware/validate.middleware';
 import { offerQuerySchema } from '../validators/catalog.validator';
 import { offerCreateSchema, offerUpdateSchema } from '../validators/offer.validator';
@@ -11,6 +11,7 @@ import { parseJsonFields } from '../middleware/parseJsonFields.middleware';
 const router = Router();
 
 router.get('/', validate(offerQuerySchema), listOffers);
+router.get('/:id', validate(idParamSchema), getOfferById);
 
 router.post(
   '/',

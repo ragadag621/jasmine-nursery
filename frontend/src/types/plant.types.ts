@@ -10,9 +10,27 @@ export interface PlantImage {
   _id?: string;
 }
 
-export type Availability = 'in_stock' | 'low_stock' | 'out_of_stock';
-export type WaterNeed = 'low' | 'medium' | 'high';
-export type SunlightNeed = 'full_sun' | 'partial_shade' | 'full_shade';
+export type Availability =
+  | 'in_stock'
+  | 'low_stock'
+  | 'out_of_stock';
+
+export type WaterNeed =
+  | 'low'
+  | 'medium'
+  | 'high';
+
+export type SunlightNeed =
+  | 'full_sun'
+  | 'partial_shade'
+  | 'full_shade';
+
+export interface PlantOffer {
+  enabled: boolean;
+  price?: number;
+  startDate?: string;
+  endDate?: string;
+}
 
 export interface Plant {
   _id: string;
@@ -32,4 +50,5 @@ export interface Plant {
   isHidden: boolean;
   createdAt: string;
   updatedAt: string;
+  offer?: PlantOffer;
 }

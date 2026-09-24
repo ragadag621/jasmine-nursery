@@ -1,11 +1,11 @@
 {
   "nav": {
     "home": "الرئيسية",
-    "about": "من نحن",
-    "catalog": "كتالوج النباتات",
+    "offers": "العروض",
+    "catalog": "الكتالوج",
     "gallery": "معرض الصور",
     "services": "خدماتنا",
-    "contact": "اتصل بنا",
+    "contact": "اتصلوا بنا",
     "adminLogin": "دخول المدير",
     "brandName": "مشتل الياسمين",
     "ariaLabel": "التنقل الرئيسي",
@@ -15,7 +15,7 @@
 
   "common": {
     "loading": "جاري التحميل...",
-    "tryAgain": "حاول مرة أخرى",
+    "tryAgain": "حاولوا مرة أخرى",
     "viewMore": "لمزيد من التفاصيل",
     "back": "رجوع",
     "language": "اللغة"
@@ -24,37 +24,28 @@
   "home": {
     "metaTitle": "مشتل الياسمين | نباتات وزهور وأشجار في ج׳ת",
     "metaDescription": "مشتل الياسمين في ج׳ת — تشكيلة واسعة من النباتات والزهور والأشجار والأصص ومستلزمات البستنة.",
-
     "heroTitleFallback": "مشتل الياسمين",
     "heroSubtitleFallback": "تشكيلة واسعة من النباتات والزهور والأشجار",
     "heroAddressFallback": "ج׳ת، إسرائيل",
-
-    "viewPlants": "تصفح النباتات",
-    "contactWhatsApp": "تواصل عبر واتساب",
-
+    "viewPlants": "تصفحوا النباتات",
+    "contactWhatsApp": "تواصلوا عبر واتساب",
     "aboutTitle": "من نحن",
-    "aboutReadMore": "اقرأ المزيد عنا",
-
+    "aboutReadMore": "تعرفوا علينا أكثر",
     "categoriesTitle": "الفئات",
     "categoriesEmpty": "لا توجد فئات بعد",
-
     "featuredTitle": "نباتات مختارة",
     "featuredEmpty": "لا توجد نباتات لعرضها بعد",
     "featuredEmptyDesc": "ستتم إضافة نباتات إلى الكتالوج قريباً",
-
     "galleryTitle": "معرض الصور",
     "galleryEmpty": "سيتم تحديث المعرض قريباً",
-    "galleryViewAll": "لمشاهدة المعرض الكامل",
-
+    "galleryViewAll": "شاهدوا المعرض الكامل",
     "reviewsTitle": "ماذا يقول عملاؤنا",
     "reviewsCount": "تقييمات على جوجل",
-
     "mapTitle": "كيفية الوصول إلينا",
     "mapIframeTitle": "موقع المشتل على الخريطة",
-    "mapFallbackAddress": "ج׳ת، إسرائيل",
+    "mapFallbackAddress": "جت، إسرائيل",
     "mapFallback": "سيتم تحديث الخريطة قريباً",
-
-    "whyTitle": "لماذا تختارنا",
+    "whyTitle": "لماذا تختاروننا",
     "whyQuality": "نباتات عالية الجودة",
     "whyQualityDesc": "كل نبتة تُختار وتُعتنى بها بعناية قبل أن تصل إليكم",
     "whySelection": "تشكيلة واسعة",
@@ -63,8 +54,7 @@
     "whyExpertiseDesc": "طاقمنا هنا لمساعدتكم على الاختيار الصحيح والعناية الناجحة",
     "whyLocal": "عمل محلي موثوق",
     "whyLocalDesc": "مشتل عريق مع مجتمع عملاء يعودون إلينا مرارًا",
-
-    "finalCtaTitle": "جاهزون لتخضير منزلكم؟",
+    "finalCtaTitle": "جاهزون لتخضير منازلكم؟",
     "finalCtaSubtitle": "زورونا في المشتل أو تواصلوا معنا عبر واتساب وسنكون سعداء بمساعدتكم"
   },
 
@@ -73,35 +63,34 @@
     "inStock": "متوفر",
     "lowStock": "مخزون محدود",
     "outOfStock": "غير متوفر",
-
     "waterLow": "ري قليل",
     "waterMedium": "ري متوسط",
     "waterHigh": "ري كثيف",
-
     "sunFull": "شمس كاملة",
     "sunPartial": "ظل جزئي",
     "sunShade": "ظل كامل",
-
-    "whatsappInquiry": "الاستفسار عن التوفر عبر واتساب",
+    "whatsappInquiry": "استفسروا عن التوفر عبر واتساب",
     "backToCatalog": "العودة إلى الكتالوج",
     "water": "الري",
-    "sunlight": "الإضاءة"
+    "sunlight": "الإضاءة",
+    "originalPrice": "السعر الأصلي",
+    "discountedPrice": "السعر الحالي",
+    "offerValidFrom": "السعر المخفض ساري من",
+    "offerValidUntil": "حتى",
+    "offerInactive": "العرض ليس نشطًا حاليًا"
   },
 
   "catalog": {
-    "title": "كتالوج النباتات",
-    "searchPlaceholder": "ابحث عن نبات بالاسم...",
+    "title": "الكتالوج",
+    "searchPlaceholder": "ابحثوا عن منتج بالاسم...",
     "allCategories": "جميع الفئات",
-
     "sortNewest": "الأحدث",
     "sortNameAsc": "الاسم: أ-ي",
     "sortNameDesc": "الاسم: ي-أ",
     "sortPriceAsc": "السعر: من الأقل للأعلى",
     "sortPriceDesc": "السعر: من الأعلى للأقل",
-
-    "empty": "لم يتم العثور على نباتات",
-    "emptyDesc": "حاول تغيير البحث أو الفلترة",
-
+    "empty": "لم يتم العثور على منتجات",
+    "emptyDesc": "حاولوا تغيير البحث أو الفلترة",
     "prev": "السابق",
     "next": "التالي",
     "pageOf": "صفحة {{page}} من {{pages}}",
@@ -119,49 +108,102 @@
 
   "about": {
     "title": "عن المشتل",
-    "fallback": "[نص مؤقت — سيتم استبداله بمحتوى حقيقي من العميل]"
+    "subtitle": "نتعرف معًا على المشتل، قيمنا والخدمات التي نقدمها لعشاق النباتات والمساحات الخضراء.",
+    "metaDescription": "تعرفوا على مشتل الياسمين، قيمنا والخدمات التي نقدمها لعشاق النباتات والمساحات الخضراء.",
+    "fallback": "نحن في مشتل الياسمين نهتم بالنباتات وبالتفاصيل التي تجعل كل مساحة أكثر جمالًا وحياة."
   },
 
   "services": {
-    "title": "خدماتنا",
-    "subtitle": "نوفر لكم كل ما تحتاجونه لاختيار النباتات والعناية بها وتجميل المساحات من حولكم.",
-
+    "title": "نبذة عنا",
+    "subtitle": "نتعرف إليكم أكثر، ونشارككم ما نقدمه وكيف نهتم بكل ما ينمو حولكم.",
+    "fallback": "[نص مؤقت — سيتم استبداله بمحتوى حقيقي من العميل]",
+    "aboutEyebrow": "نبذة عنا",
+    "aboutTitle": "نزرع أكثر من مجرد نباتات",
+    "valuesEyebrow": "ما يميزنا",
+    "valuesTitle": "قيمنا في كل ما نقدمه",
+    "valuesSubtitle": "نهتم بجودة النباتات، بالتفاصيل الصغيرة، وبالتجربة التي يحصل عليها كل شخص يزورنا.",
+    "offeringsEyebrow": "ماذا نقدم؟",
+    "offeringsTitle": "خدمات مصممة لعشاق النباتات",
+    "offeringsSubtitle": "من اختيار النبتة المناسبة إلى العناية بالمساحات الخضراء، نقدم مجموعة من الخدمات التي تساعدكم على تحويل المساحة من حولكم إلى مكان أكثر حياة.",
     "catalogTitle": "النباتات والزهور",
-    "catalogDescription": "تشكيلة متنوعة من نباتات الزينة الداخلية والخارجية، والزهور والأشجار التي تناسب مختلف المساحات والأذواق.",
-
-    "gardenTitle": "تصميم واستشارات الحدائق",
-    "gardenDescription": "نساعدكم في اختيار النباتات المناسبة وتنسيق المساحات وتصميم الحدائق والشرفات بطريقة جميلة وعملية.",
-
-    "potsTitle": "الأصص والإكسسوارات",
-    "potsDescription": "مجموعة متنوعة من الأصص والأوعية بأحجام وتصاميم مختلفة لتكمل جمال نباتاتكم وتناسب ديكور المكان.",
-
+    "catalogDescription": "تشكيلة متنوعة من النباتات والزهور والأشجار المناسبة للمنازل، الحدائق والمساحات المختلفة، مع خيارات تناسب احتياجات وذوق كل شخص.",
+    "gardenTitle": "تنسيق الحدائق",
+    "gardenDescription": "نساعدكم في تحويل المساحات الخارجية إلى أماكن خضراء جميلة ومتناسقة، مع الاهتمام باختيار النباتات المناسبة للمكان.",
+    "potsTitle": "أصص ومستلزمات النباتات",
+    "potsDescription": "نوفر أصصًا ومستلزمات تساعدكم على إبراز نباتاتكم والعناية بها بطريقة عملية وجميلة.",
     "gardeningTitle": "مستلزمات البستنة",
-    "gardeningDescription": "نوفر مستلزمات العناية بالنباتات من تربة وأسمدة وأدوات بستنة لمساعدتكم على الحفاظ على نباتات صحية وجميلة."
+    "gardeningDescription": "مجموعة من المستلزمات والأدوات التي تساعدكم في العناية بالنباتات والحفاظ على المساحات الخضراء.",
+    "closingEyebrow": "نحن هنا لمساعدتكم",
+    "closingTitle": "نساعدكم على جعل المساحة أكثر حياة",
+    "closingDescription": "سواء كنتم تبحثون عن نبتة جديدة، أو تريدون تنسيق مساحة خضراء، نحن هنا لمساعدتكم في اختيار ما يناسبكم.",
+    "values": {
+      "qualityTitle": "الجودة أولًا",
+      "qualityDescription": "نحرص على تقديم نباتات وخدمات نهتم بتفاصيلها، لأن الجودة تبدأ من العناية بكل خطوة.",
+      "careTitle": "العناية والاهتمام",
+      "careDescription": "النبات يحتاج إلى أكثر من الماء والضوء. نساعدكم على فهم احتياجاته والعناية به بطريقة صحيحة.",
+      "varietyTitle": "تنوع يناسبكم",
+      "varietyDescription": "نقدم مجموعة متنوعة من النباتات والخدمات لتجدوا ما يناسب ذوقكم ومساحتكم واحتياجاتكم."
+    }
+  },
+
+  "offers": {
+    "pageTitle": "العروض والخصومات",
+    "pageSubtitle": "اكتشفوا عروضنا الحالية، والخصومات على نباتات معينة، والمجموعات المميزة للموسم.",
+    "badge": "عرض",
+    "discountBadge": "خصم",
+    "groupEyebrow": "عروض حسب الاختيار",
+    "discountEyebrow": "سعر خاص للنبات",
+    "generalEyebrow": "عروض عامة",
+    "groupBadge": "سعر ثابت",
+    "generalBadge": "عرض عام",
+    "openOffer": "شاهدوا النباتات",
+    "backToOffers": "العودة إلى جميع العروض",
+    "groupEmptyTitle": "لا توجد عروض جماعية نشطة",
+    "groupEmptyDescription": "ستظهر هنا العروض التي تشمل نباتات يختارها المشتل يدويًا",
+    "generalEmptyTitle": "لا توجد عروض عامة نشطة",
+    "generalEmptyDescription": "عودوا لاحقًا للحصول على تحديثات جديدة",
+    "groupNoPlants": "لم يتم اختيار نباتات لهذا العرض.",
+    "viewCatalog": "عرض الكتالوج",
+    "plantsIncluded": "يشمل {{count}} نباتات",
+    "emptyTitle": "لا توجد عروض نشطة حاليًا",
+    "emptyDescription": "عودوا لاحقًا للحصول على عروض جديدة",
+    "plantEmptyTitle": "لا توجد خصومات نشطة على النباتات",
+    "plantEmptyDescription": "ستظهر خصومات النباتات هنا عند توفرها",
+    "sections": {
+      "groupTitle": "عروض جماعية وأسعار ثابتة",
+      "groupDescription": "يعرض كل عرض النباتات التي اختارها المشتل يدويًا.",
+      "generalTitle": "العروض العامة",
+      "generalDescription": "محتوى ترويجي عام لا يرتبط بقائمة نباتات محددة.",
+      "plantsTitle": "خصومات النباتات",
+      "plantsDescription": "يظهر السعر العادي مشطوبًا بجانب سعر العرض. اضغطوا على النبات للتفاصيل."
+    },
+    "summary": {
+      "general": "العروض النشطة",
+      "generalDesc": "عروض واسعة ومحدثة عبر المواسم",
+      "plants": "خصومات النباتات",
+      "plantsDesc": "أسعار خاصة على نباتات مختارة",
+      "featured": "مختارات",
+      "featuredDesc": "نباتات بارزة من الكتالوج"
+    }
   },
 
   "contact": {
-    "title": "اتصل بنا",
+    "title": "اتصلوا بنا",
     "detailsTitle": "معلومات التواصل",
-    "formTitle": "أرسل لنا رسالة",
-    "whatsappCta": "أرسل رسالة عبر واتساب",
-
+    "formTitle": "أرسلوا لنا رسالة",
+    "whatsappCta": "أرسلوا رسالة عبر واتساب",
     "form": {
       "name": "الاسم",
-      "namePlaceholder": "أدخل اسمك",
-
+      "namePlaceholder": "أدخلوا اسمكم",
       "phone": "رقم الهاتف",
       "phonePlaceholder": "05X-XXX-XXXX",
-
       "email": "البريد الإلكتروني",
       "emailPlaceholder": "example@email.com",
-
       "message": "الرسالة",
-      "messagePlaceholder": "اكتب لنا كيف يمكننا مساعدتك...",
-
+      "messagePlaceholder": "اكتبوا لنا كيف يمكننا مساعدتكم...",
       "submit": "إرسال",
       "sending": "جارٍ الإرسال...",
-
-      "successTitle": "شكراً لتواصلكم!",
+      "successTitle": "شكرًا لتواصلكم!",
       "successBody": "سنتواصل معكم في أقرب وقت.",
       "sendAnother": "إرسال رسالة أخرى"
     }
@@ -172,7 +214,7 @@
     "description": "تشكيلة واسعة من النباتات والزهور والأشجار ومستلزمات البستنة لتجميل مساحاتكم والعناية بها.",
     "location": "مشتل الياسمين — ج׳ת",
     "navigation": "روابط الموقع",
-    "contact": "تواصل معنا",
+    "contact": "تواصلوا معنا",
     "phoneFallback": "054-664-3896",
     "addressFallback": "ج׳ת، إسرائيل",
     "hours": "ساعات العمل",
@@ -191,7 +233,7 @@
 
   "notFound": {
     "title": "404 — الصفحة غير موجودة",
-    "desc": "تحقق من الرابط وحاول مرة أخرى."
+    "desc": "تحققوا من الرابط وحاولوا مرة أخرى."
   },
 
   "admin": {
@@ -222,20 +264,15 @@
     "plants": {
       "title": "إدارة النباتات",
       "add": "إضافة نبات",
-
       "searchLabel": "البحث",
       "searchPlaceholder": "ابحث عن نبات...",
-
       "visibilityUpdated": "تم تحديث الحالة",
       "visibilityUpdateFailed": "فشل تحديث الحالة",
-
       "deleteConfirm": "هل تريد حذف هذا النبات؟ لا يمكن التراجع عن هذا الإجراء.",
       "deleted": "تم حذف النبات",
       "deleteFailed": "فشل حذف النبات",
-
       "emptyTitle": "لا توجد نباتات حتى الآن",
       "emptyDescription": "اضغط على «إضافة نبات» للبدء",
-
       "table": {
         "image": "الصورة",
         "name": "الاسم",
@@ -243,10 +280,8 @@
         "availability": "التوفر",
         "status": "الحالة",
         "actions": "الإجراءات",
-
         "hidden": "مخفي",
         "visible": "ظاهر",
-
         "edit": "تعديل",
         "show": "إظهار",
         "hide": "إخفاء",
@@ -265,46 +300,39 @@
     "plantForm": {
       "nameHe": "اسم النبات (بالعبرية)",
       "nameAr": "اسم النبات (بالعربية)",
-
       "scientificName": "الاسم العلمي (اختياري)",
-
-      "slug": "Slug (معرّف رابط URL)",
-      "slugPlaceholder": "e.g. monstera-deliciosa",
-
       "descriptionHe": "الوصف (بالعبرية)",
       "descriptionAr": "الوصف (بالعربية)",
-
       "category": "الفئة",
-
       "price": "السعر (₪، اختياري)",
-
       "availability": "التوفر",
       "availabilityInStock": "متوفر",
       "availabilityLowStock": "كمية محدودة",
       "availabilityOutOfStock": "غير متوفر",
-
       "water": "احتياجات الري",
       "waterLow": "ري قليل",
       "waterMedium": "ري متوسط",
       "waterHigh": "ري كثير",
-
       "sunlight": "احتياجات الإضاءة",
       "sunlightFullSun": "شمس كاملة",
       "sunlightPartialShade": "ظل جزئي",
       "sunlightFullShade": "ظل كامل",
-
       "featured": "إظهار في الصفحة الرئيسية (نبات مميز)",
-
+      "offerTitle": "العرض الخاص بالنبات",
+      "offerDescription": "حدد سعرًا مخفضًا على النبات إذا كان العرض ساريًا في فترة محددة.",
+      "offerEnabled": "تفعيل العرض",
+      "offerPrice": "السعر المخفض (₪)",
+      "offerStartDate": "تاريخ البداية",
+      "offerEndDate": "تاريخ النهاية",
       "images": "الصور",
       "removingImage": "جارٍ حذف الصورة...",
       "imagesDescription": "الصورة الأولى في القائمة هي التي تظهر في بطاقة النبات والكتالوج. لاستبدالها، احذفيها أولًا ثم ارفعي الصورة الجديدة.",
-
       "imageRemoved": "تم حذف الصورة بنجاح",
       "imageRemoveFailed": "فشل حذف الصورة",
-
       "update": "تحديث النبات",
       "create": "إضافة النبات"
     },
+
     "categories": {
       "pageTitle": "إدارة الفئات",
       "add": "إضافة فئة",
@@ -333,6 +361,7 @@
         "create": "إضافة الفئة"
       }
     },
+
     "messages": {
       "pageTitle": "رسائل التواصل",
       "tabs": {
@@ -355,6 +384,7 @@
         "viewMessage": "عرض الرسالة",
         "markRead": "تحديد كمقروءة",
         "markResolved": "تحديد كتمت المعالجة",
+        "whatsapp": "تواصل عبر واتساب",
         "delete": "حذف"
       },
       "viewTitle": "تفاصيل الرسالة",
@@ -365,40 +395,40 @@
       "deleteError": "فشل حذف الرسالة",
       "emptyTitle": "لا توجد رسائل"
     },
+
     "content": {
       "pageTitle": "إدارة محتوى الموقع",
       "pageDescription": "إدارة محتوى الصفحة الرئيسية والعروض وتقييمات العملاء",
-
       "tabs": {
         "homepage": "الصفحة الرئيسية",
         "offers": "العروض",
         "testimonials": "تقييمات العملاء"
       },
-
       "tabsLabel": "أقسام محتوى الموقع",
 
       "homepage": {
         "heroSection": "القسم الرئيسي",
+        "siteNameHe": "اسم المشتل (بالعبرية)",
+        "siteNameAr": "اسم المشتل (بالعربية)",
         "heroTitleHe": "العنوان الرئيسي (بالعبرية)",
         "heroTitleAr": "العنوان الرئيسي (بالعربية)",
         "heroSubtitleHe": "الوصف الرئيسي (بالعبرية)",
         "heroSubtitleAr": "الوصف الرئيسي (بالعربية)",
         "heroImage": "الصورة الرئيسية",
-
+        "logo": "شعار المشتل",
+        "logoDeleteSuccess": "تم حذف الشعار بنجاح",
+        "logoDeleteError": "فشل حذف الشعار",
         "aboutSection": "قسم من نحن",
         "aboutTextHe": "النص التعريفي (بالعبرية)",
         "aboutTextAr": "النص التعريفي (بالعربية)",
-
         "contactSection": "معلومات التواصل",
         "phone": "رقم الهاتف",
         "whatsapp": "رقم واتساب",
         "address": "العنوان",
-
         "openingHoursSection": "ساعات العمل",
         "day": "اليوم",
         "open": "وقت الفتح",
         "close": "وقت الإغلاق",
-
         "days": {
           "sunday": "الأحد",
           "monday": "الاثنين",
@@ -408,72 +438,66 @@
           "friday": "الجمعة",
           "saturday": "السبت"
         },
-
         "socialSection": "روابط التواصل الاجتماعي",
         "instagram": "Instagram",
         "facebook": "Facebook",
         "tiktok": "TikTok",
-
         "locationSection": "الموقع والتقييمات",
         "googleRating": "تقييم Google",
         "googleReviewCount": "عدد تقييمات Google",
         "mapEmbedUrl": "رابط الخريطة",
-
         "save": "حفظ التغييرات",
         "saveSuccess": "تم تحديث محتوى الموقع بنجاح",
-        "saveError": "فشل تحديث محتوى الموقع"
+        "saveError": "فشل تحديث محتوى الموقع",
+        "validationFailed": "فشل التحقق: {{details}}"
       },
 
       "offers": {
         "add": "إضافة عرض",
+        "addGroup": "إضافة عرض جماعي",
+        "addGeneral": "إضافة عرض عام",
         "addTitle": "إضافة عرض جديد",
         "editTitle": "تعديل العرض",
-
         "active": "نشط",
         "inactive": "غير نشط",
-
         "startDate": "تاريخ البداية",
         "endDate": "تاريخ النهاية",
-
         "edit": "تعديل",
         "delete": "حذف",
-
         "emptyTitle": "لا توجد عروض حتى الآن",
         "emptyDescription": "اضغط على «إضافة عرض» للبدء",
-
         "createSuccess": "تمت إضافة العرض بنجاح",
         "createError": "فشلت إضافة العرض",
-
         "updateSuccess": "تم تحديث العرض بنجاح",
         "updateError": "فشل تحديث العرض",
-
         "deleteConfirmation": "هل تريد حذف هذا العرض؟ لا يمكن التراجع عن هذا الإجراء.",
         "deleteSuccess": "تم حذف العرض",
-        "deleteError": "فشل حذف العرض"
+        "deleteError": "فشل حذف العرض",
+        "groupSection": "العروض الجماعية والأسعار الثابتة",
+        "groupDescription": "اختر عدة نباتات واحفظ علاقتها بهذا العرض.",
+        "generalSection": "العروض العامة",
+        "generalDescription": "محتوى ترويجي بدون اختيار نباتات.",
+        "plantSection": "خصومات النباتات الفردية",
+        "plantDescription": "إدارة سعر العرض لكل نبات من محرر النباتات.",
+        "managePlant": "إدارة النبات",
+        "sectionEmpty": "لا توجد عناصر في هذا القسم بعد"
       },
 
       "testimonials": {
         "add": "إضافة تقييم",
         "addTitle": "إضافة تقييم جديد",
         "editTitle": "تعديل التقييم",
-
         "visible": "ظاهر",
         "hidden": "مخفي",
-
         "ratingLabel": "التقييم",
-
         "edit": "تعديل",
         "delete": "حذف",
-
         "emptyTitle": "لا توجد تقييمات حتى الآن",
         "emptyDescription": "اضغط على «إضافة تقييم» للبدء",
-
         "createSuccess": "تمت إضافة التقييم بنجاح",
         "createError": "فشلت إضافة التقييم",
-
         "updateSuccess": "تم تحديث التقييم بنجاح",
         "updateError": "فشل تحديث التقييم",
-
         "deleteConfirmation": "هل تريد حذف هذا التقييم؟ لا يمكن التراجع عن هذا الإجراء.",
         "deleteSuccess": "تم حذف التقييم",
         "deleteError": "فشل حذف التقييم"
@@ -490,7 +514,15 @@
         "image": "صورة العرض",
         "update": "تحديث العرض",
         "create": "إضافة العرض",
-        "cancel": "إلغاء"
+        "cancel": "إلغاء",
+        "plants": "النباتات المشمولة بالعرض",
+        "selectPlants": "اختيار النباتات",
+        "noPlants": "لا توجد نباتات متاحة للاختيار",
+        "selectedPlants": "عدد النباتات المختارة: {{count}}",
+        "plantsRequired": "يرجى اختيار نبات واحد على الأقل",
+        "groupPlants": "النباتات المختارة للعرض الجماعي",
+        "generalNoPlants": "عرض عام بدون قائمة نباتات",
+        "generalNoPlantsDescription": "سيظهر العرض كمحتوى عام فقط. لا حاجة لاختيار نباتات."
       },
 
       "testimonialForm": {
@@ -508,108 +540,81 @@
     "gallery": {
       "pageTitle": "إدارة معرض الصور",
       "pageDescription": "إضافة وتعديل وإدارة صور المعرض",
-
       "itemsTitle": "صور المعرض",
       "itemsDescription": "إدارة العناصر والصور المعروضة في المعرض",
       "itemCount": "{{count}} عناصر",
       "imageCount": "{{count}} صور",
-
       "addTitle": "إضافة إلى المعرض",
       "addDescription": "أضف مجموعة جديدة من الصور إلى معرض الصور",
-
       "editTitle": "تعديل عنصر المعرض",
       "editDescription": "تعديل معلومات العنصر وإدارة صوره",
-
       "titleHebrew": "العنوان بالعبرية",
       "titleArabic": "العنوان بالعربية",
-
       "category": "الفئة",
-
       "categories": {
         "nursery": "المشتل",
         "beforeAfter": "تصميم الحدائق",
         "events": "فعاليات"
       },
-
       "images": "الصور",
       "imagesDescription": "اختر صورة واحدة أو أكثر لرفعها إلى المعرض",
-
       "currentImages": "الصور الحالية",
       "currentImagesDescription": "يمكنك حذف أي صورة بشكل منفصل",
       "noImages": "لا توجد صور حالياً",
-
       "replaceImages": "استبدال الصور",
       "replaceImagesDescription": "اختيار صور جديدة سيستبدل جميع الصور الحالية لهذا العنصر",
       "replacementSelected": "تم اختيار {{count}} صور للاستبدال",
-
       "uploadArea": "منطقة رفع الصور",
       "chooseImages": "اختر الصور أو اسحبها إلى هنا",
       "dropImages": "أفلت الصور هنا",
       "uploadHint": "JPEG أو PNG أو WebP — الحد الأقصى 5 ميجابايت للصورة",
       "multipleImages": "يمكنك اختيار عدة صور",
       "singleImage": "يمكنك اختيار صورة واحدة",
-
       "selectedImages": "الصور المختارة",
       "newImages": "{{count}} صور جديدة",
       "existing": "حالية",
       "new": "جديدة",
-
       "invalidFileType": "نوع الملف غير مدعوم: {{name}}",
       "fileTooLarge": "حجم الملف كبير جداً: {{name}}",
-
       "removeImage": "حذف الصورة",
-
       "upload": "رفع الصور",
       "uploading": "جارٍ رفع الصور...",
-
       "saveChanges": "حفظ التغييرات",
       "saving": "جارٍ الحفظ...",
       "cancel": "إلغاء",
-
       "edit": "تعديل",
       "delete": "حذف",
-
       "selectAtLeastOneImage": "يرجى اختيار صورة واحدة على الأقل",
-
       "createSuccess": "تمت إضافة الصور إلى المعرض بنجاح",
       "createError": "تعذر إضافة الصور إلى المعرض",
-
       "updateSuccess": "تم تحديث عنصر المعرض بنجاح",
       "updateError": "تعذر تحديث عنصر المعرض",
-
       "deleteConfirmation": "هل أنت متأكد من حذف عنصر المعرض بالكامل؟",
       "deleteSuccess": "تم حذف عنصر المعرض بنجاح",
       "deleteError": "تعذر حذف عنصر المعرض",
-
       "deleteImageConfirmation": "هل أنت متأكد من حذف هذه الصورة؟",
       "deleteImageSuccess": "تم حذف الصورة بنجاح",
       "deleteImageError": "تعذر حذف الصورة",
-
       "empty": "لا توجد عناصر في المعرض بعد"
     }
   },
 
   "dashboard": {
     "title": "لوحة التحكم",
-
     "stats": {
       "new": "جديد",
-
       "plants": {
         "label": "النباتات",
         "description": "إجمالي النباتات في النظام"
       },
-
       "categories": {
         "label": "الفئات",
         "description": "الفئات النشطة"
       },
-
       "galleryImages": {
         "label": "صور المعرض",
         "description": "إجمالي الصور في المعرض"
       },
-
       "newMessages": {
         "label": "الرسائل الجديدة",
         "description": "بانتظار القراءة"

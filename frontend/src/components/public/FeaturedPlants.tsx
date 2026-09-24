@@ -8,7 +8,6 @@ import { PlantCard } from './PlantCard';
 
 import {
   PlantCardSkeleton,
-  Skeleton,
 } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorState } from '@/components/ui/ErrorState';

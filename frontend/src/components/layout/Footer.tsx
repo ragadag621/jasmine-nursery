@@ -8,11 +8,12 @@ import { Container } from '@/components/ui/Container'
 
 export function Footer() {
   const { data: content } = useFetch(fetchSiteContent, [])
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const language = i18n.language.startsWith('ar') ? 'ar' : 'he'
 
   const FOOTER_LINKS = [
     { to: '/', label: t('nav.home') },
-    { to: '/about', label: t('nav.about') },
+    { to: '/offers', label: t('nav.offers') },
     { to: '/plants', label: t('nav.catalog') },
     { to: '/gallery', label: t('nav.gallery') },
     { to: '/services', label: t('nav.services') },
@@ -60,8 +61,11 @@ export function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2.5">
+              {content?.logo?.url && (
+                <img src={content.logo.url} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
+              )}
               <h3 className="font-display text-base text-[var(--color-forest-800)]">
-                {t('footer.brandName')}
+                {content?.siteName?.[language] ?? ''}
               </h3>
             </div>
 

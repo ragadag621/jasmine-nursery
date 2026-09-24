@@ -108,7 +108,7 @@ export default function CatalogPage() {
   };
 
   const plants = data?.plants ?? [];
-  const currentPage = data?.meta.page ?? filters.page;
+  const currentPage = data?.meta.page ?? filters.page ?? 1;
   const totalPages = data?.meta.pages ?? 1;
 
   return (

@@ -3,6 +3,8 @@ import { Router } from 'express';
 import {
   getSiteContent,
   updateSiteContent,
+  uploadLogo,
+  deleteLogo,
 } from '../controllers/content.controller';
 
 import { validate } from '../middleware/validate.middleware';
@@ -14,7 +16,7 @@ import {
   requireAdmin,
 } from '../middleware/auth.middleware';
 
-import { uploadSingleHeroImage } from '../middleware/upload.middleware';
+import { uploadSingleHeroImage, uploadSingleLogo } from '../middleware/upload.middleware';
 
 import { parseJsonFields } from '../middleware/parseJsonFields.middleware';
 
@@ -29,6 +31,7 @@ router.put(
   uploadSingleHeroImage,
   parseJsonFields([
     'heroTitle',
+    'siteName',
     'heroSubtitle',
     'aboutText',
     'openingHours',
@@ -37,5 +40,8 @@ router.put(
   validate(contentUpdateSchema),
   updateSiteContent,
 );
+
+router.post('/logo', verifyToken, requireAdmin, uploadSingleLogo, uploadLogo);
+router.delete('/logo', verifyToken, requireAdmin, deleteLogo);
 
 export default router;

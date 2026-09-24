@@ -234,6 +234,15 @@ describe("Plant API", () => {
             sunlight: "partial_shade",
           })
         )
+        .field(
+          "offer",
+          JSON.stringify({
+            enabled: true,
+            price: 55,
+            startDate: "2030-01-01",
+            endDate: "2030-12-31",
+          })
+        )
         .field("featured", "false")
         .field("isHidden", "false")
         .expect(201)
@@ -246,6 +255,9 @@ describe("Plant API", () => {
       expect(response.body.data.name.ar).toBe(
         "نبتة تم إنشاؤها للاختبار"
       )
+      expect(response.body.data.offer).toBeDefined()
+      expect(response.body.data.offer.enabled).toBe(true)
+      expect(response.body.data.offer.price).toBe(55)
 
       createdPlantId = response.body.data._id
 
@@ -299,6 +311,15 @@ describe("Plant API", () => {
             sunlight: "full_sun",
           })
         )
+        .field(
+          "offer",
+          JSON.stringify({
+            enabled: true,
+            price: 90,
+            startDate: "2031-01-01",
+            endDate: "2031-12-31",
+          })
+        )
         .field("featured", "true")
         .field("isHidden", "false")
         .expect(200)
@@ -312,6 +333,9 @@ describe("Plant API", () => {
       expect(response.body.data.price).toBe(120)
       expect(response.body.data.availability).toBe("low_stock")
       expect(response.body.data.featured).toBe(true)
+      expect(response.body.data.offer).toBeDefined()
+      expect(response.body.data.offer.enabled).toBe(true)
+      expect(response.body.data.offer.price).toBe(90)
 
       // Update our reference because slug changed.
       testPlantSlug = newSlug

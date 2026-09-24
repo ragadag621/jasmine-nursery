@@ -1,9 +1,15 @@
 import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { Link } from "react-router-dom"
 
 import { useFetch } from "@/hooks/useFetch"
 
-import { fetchSiteContent, updateSiteContent } from "@/api/content.api"
+import {
+  fetchSiteContent,
+  updateSiteContent,
+  uploadSiteLogo,
+  deleteSiteLogo,
+} from "@/api/content.api"
 
 import {
   fetchAllTestimonials,
@@ -20,7 +26,12 @@ import {
   buildOfferFormData,
 } from "@/api/offers.api"
 
-import type { OfferFormValues } from "@/components/admin/OfferForm"
+import { fetchPlantsAdmin } from "@/api/plants.api"
+
+import type {
+  OfferFormValues,
+  OfferType,
+} from "@/components/admin/OfferForm"
 import { OfferForm } from "@/components/admin/OfferForm"
 import { TestimonialForm } from "@/components/admin/TestimonialForm"
 
@@ -36,7 +47,12 @@ import { ImageDropzone } from "@/components/admin/ImageDropzone"
 import { useToast } from "@/context/ToastContext"
 import { setPageMeta } from "@/utils/seo"
 
-import type { Offer, SiteContent, Testimonial } from "@/types/content.types"
+import type {
+  Offer,
+  SiteContent,
+  Testimonial,
+} from "@/types/content.types"
+import type { Plant } from "@/types/plant.types"
 
 interface TestimonialFormValues {
   customerName: string
@@ -59,6 +75,8 @@ interface OpeningHourForm {
 }
 
 interface HomepageForm {
+  siteNameHe: string
+  siteNameAr: string
   heroTitleHe: string
   heroTitleAr: string
   heroSubtitleHe: string
@@ -103,6 +121,8 @@ function createDefaultOpeningHours(): OpeningHourForm[] {
 
 function buildHomepageForm(content: SiteContent): HomepageForm {
   return {
+    siteNameHe: content.siteName?.he ?? "",
+    siteNameAr: content.siteName?.ar ?? "",
     heroTitleHe: content.heroTitle.he,
     heroTitleAr: content.heroTitle.ar,
 
@@ -144,7 +164,9 @@ export default function ContentManagerPage() {
 
   const [activeTab, setActiveTab] = useState<Tab>("homepage")
 
-  const language: Language = i18n.language.startsWith("ar") ? "ar" : "he"
+  const language: Language = i18n.language.startsWith("ar")
+    ? "ar"
+    : "he"
 
   const tabs = useMemo(
     () => [
@@ -249,9 +271,13 @@ export default function ContentManagerPage() {
 
       {activeTab === "homepage" && <HomepageTab />}
 
-      {activeTab === "offers" && <OffersTab language={language} />}
+      {activeTab === "offers" && (
+        <OffersTab language={language} />
+      )}
 
-      {activeTab === "testimonials" && <TestimonialsTab language={language} />}
+      {activeTab === "testimonials" && (
+        <TestimonialsTab language={language} />
+      )}
     </div>
   )
 }
@@ -271,11 +297,17 @@ function HomepageTab() {
     refetch,
   } = useFetch(fetchSiteContent, [])
 
-  const [form, setForm] = useState<HomepageForm | null>(null)
+  const [form, setForm] =
+    useState<HomepageForm | null>(null)
 
-  const [heroImageFile, setHeroImageFile] = useState<File | null>(null)
+  const [heroImageFile, setHeroImageFile] =
+    useState<File | null>(null)
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [logoFile, setLogoFile] =
+    useState<File | null>(null)
+
+  const [isSubmitting, setIsSubmitting] =
+    useState(false)
 
   useEffect(() => {
     if (!content) {
@@ -285,7 +317,9 @@ function HomepageTab() {
     setForm(buildHomepageForm(content))
   }, [content])
 
-  const updateField = <K extends keyof HomepageForm>(
+  const updateField = <
+    K extends keyof HomepageForm
+  >(
     field: K,
     value: HomepageForm[K],
   ) => {
@@ -311,7 +345,9 @@ function HomepageTab() {
         return current
       }
 
-      const openingHours = [...current.openingHours]
+      const openingHours = [
+        ...current.openingHours,
+      ]
 
       openingHours[index] = {
         ...openingHours[index],
@@ -334,6 +370,14 @@ function HomepageTab() {
 
     try {
       const formData = new FormData()
+
+      formData.append(
+        "siteName",
+        JSON.stringify({
+          he: form.siteNameHe,
+          ar: form.siteNameAr,
+        }),
+      )
 
       formData.append(
         "heroTitle",
@@ -365,36 +409,74 @@ function HomepageTab() {
 
       formData.append("address", form.address)
 
-      formData.append("openingHours", JSON.stringify(form.openingHours))
-
       formData.append(
-        "socialLinks",
-        JSON.stringify({
+        "openingHours",
+        JSON.stringify(
+          form.openingHours.filter(
+            (hour) => hour.open && hour.close,
+          ),
+        ),
+      )
+
+      const socialLinks = Object.fromEntries(
+        Object.entries({
           instagram: form.instagram,
           facebook: form.facebook,
           tiktok: form.tiktok,
-        }),
+        }).filter(([, value]) => value.trim()),
       )
 
-      formData.append("googleRating", form.googleRating)
+      formData.append("socialLinks", JSON.stringify(socialLinks))
 
-      formData.append("googleReviewCount", form.googleReviewCount)
+      formData.append(
+        "googleRating",
+        form.googleRating,
+      )
 
-      formData.append("mapEmbedUrl", form.mapEmbedUrl)
+      formData.append(
+        "googleReviewCount",
+        form.googleReviewCount,
+      )
+
+      if (form.mapEmbedUrl.trim()) {
+        formData.append("mapEmbedUrl", form.mapEmbedUrl)
+      }
 
       if (heroImageFile) {
-        formData.append("heroImage", heroImageFile)
+        formData.append(
+          "heroImage",
+          heroImageFile,
+        )
       }
 
       await updateSiteContent(formData)
 
-      showToast(t("admin.content.homepage.saveSuccess"), "success")
+      if (logoFile) {
+        await uploadSiteLogo(logoFile)
+      }
+
+      showToast(
+        t("admin.content.homepage.saveSuccess"),
+        "success",
+      )
 
       setHeroImageFile(null)
+      setLogoFile(null)
+
       refetch()
     } catch (err: any) {
+      const details = err?.response?.data?.errors ?? []
+      const detailText = Array.isArray(details)
+        ? details.join("; ")
+        : String(details)
+
       showToast(
-        err?.response?.data?.message || t("admin.content.homepage.saveError"),
+        detailText
+          ? t("admin.content.homepage.validationFailed", {
+              details: detailText,
+            })
+          : err?.response?.data?.message ||
+              t("admin.content.homepage.saveError"),
         "error",
       )
     } finally {
@@ -413,7 +495,12 @@ function HomepageTab() {
   }
 
   if (status === "error") {
-    return <ErrorState message={error ?? undefined} onRetry={refetch} />
+    return (
+      <ErrorState
+        message={error ?? undefined}
+        onRetry={refetch}
+      />
+    )
   }
 
   return (
@@ -429,42 +516,81 @@ function HomepageTab() {
           shadow-sm
         "
       >
-        <SectionHeader title={t("admin.content.homepage.heroSection")} />
+        <SectionHeader
+          title={t(
+            "admin.content.homepage.heroSection",
+          )}
+        />
 
         <div className="space-y-4 p-3 sm:p-4">
           <div className="grid gap-3 md:grid-cols-2">
             <Input
-              label={t("admin.content.homepage.heroTitleHe")}
+              label={t("admin.content.homepage.siteNameHe")}
+              value={form.siteNameHe}
+              onChange={(event) => updateField("siteNameHe", event.target.value)}
+              dir="rtl"
+            />
+            <Input
+              label={t("admin.content.homepage.siteNameAr")}
+              value={form.siteNameAr}
+              onChange={(event) => updateField("siteNameAr", event.target.value)}
+              dir="rtl"
+            />
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2">
+            <Input
+              label={t(
+                "admin.content.homepage.heroTitleHe",
+              )}
               value={form.heroTitleHe}
               onChange={(event) =>
-                updateField("heroTitleHe", event.target.value)
+                updateField(
+                  "heroTitleHe",
+                  event.target.value,
+                )
               }
               dir="rtl"
             />
 
             <Input
-              label={t("admin.content.homepage.heroTitleAr")}
+              label={t(
+                "admin.content.homepage.heroTitleAr",
+              )}
               value={form.heroTitleAr}
               onChange={(event) =>
-                updateField("heroTitleAr", event.target.value)
+                updateField(
+                  "heroTitleAr",
+                  event.target.value,
+                )
               }
               dir="rtl"
             />
 
             <Input
-              label={t("admin.content.homepage.heroSubtitleHe")}
+              label={t(
+                "admin.content.homepage.heroSubtitleHe",
+              )}
               value={form.heroSubtitleHe}
               onChange={(event) =>
-                updateField("heroSubtitleHe", event.target.value)
+                updateField(
+                  "heroSubtitleHe",
+                  event.target.value,
+                )
               }
               dir="rtl"
             />
 
             <Input
-              label={t("admin.content.homepage.heroSubtitleAr")}
+              label={t(
+                "admin.content.homepage.heroSubtitleAr",
+              )}
               value={form.heroSubtitleAr}
               onChange={(event) =>
-                updateField("heroSubtitleAr", event.target.value)
+                updateField(
+                  "heroSubtitleAr",
+                  event.target.value,
+                )
               }
               dir="rtl"
             />
@@ -480,12 +606,18 @@ function HomepageTab() {
                 sm:text-sm
               "
             >
-              {t("admin.content.homepage.heroImage")}
+              {t(
+                "admin.content.homepage.heroImage",
+              )}
             </p>
 
             <ImageDropzone
               multiple={false}
-              onFilesSelected={(files) => setHeroImageFile(files[0] ?? null)}
+              onFilesSelected={(files) =>
+                setHeroImageFile(
+                  files[0] ?? null,
+                )
+              }
               existingImages={
                 content?.heroImage?.url
                   ? [
@@ -496,6 +628,26 @@ function HomepageTab() {
                     ]
                   : []
               }
+            />
+          </div>
+
+          <div>
+            <p className="mb-2 text-xs font-medium text-[var(--color-ink-700)] sm:text-sm">
+              {t("admin.content.homepage.logo")}
+            </p>
+            <ImageDropzone
+              multiple={false}
+              onFilesSelected={(files) => setLogoFile(files[0] ?? null)}
+              existingImages={content?.logo?.url ? [{ id: "logo", url: content.logo.url }] : []}
+              onRemoveExisting={async () => {
+                try {
+                  await deleteSiteLogo()
+                  showToast(t("admin.content.homepage.logoDeleteSuccess"), "success")
+                  refetch()
+                } catch {
+                  showToast(t("admin.content.homepage.logoDeleteError"), "error")
+                }
+              }}
             />
           </div>
         </div>
@@ -512,22 +664,40 @@ function HomepageTab() {
           shadow-sm
         "
       >
-        <SectionHeader title={t("admin.content.homepage.aboutSection")} />
+        <SectionHeader
+          title={t(
+            "admin.content.homepage.aboutSection",
+          )}
+        />
 
         <div className="grid gap-3 p-3 md:grid-cols-2 sm:p-4">
           <Textarea
-            label={t("admin.content.homepage.aboutTextHe")}
+            label={t(
+              "admin.content.homepage.aboutTextHe",
+            )}
             rows={4}
             value={form.aboutTextHe}
-            onChange={(event) => updateField("aboutTextHe", event.target.value)}
+            onChange={(event) =>
+              updateField(
+                "aboutTextHe",
+                event.target.value,
+              )
+            }
             dir="rtl"
           />
 
           <Textarea
-            label={t("admin.content.homepage.aboutTextAr")}
+            label={t(
+              "admin.content.homepage.aboutTextAr",
+            )}
             rows={4}
             value={form.aboutTextAr}
-            onChange={(event) => updateField("aboutTextAr", event.target.value)}
+            onChange={(event) =>
+              updateField(
+                "aboutTextAr",
+                event.target.value,
+              )
+            }
             dir="rtl"
           />
         </div>
@@ -544,27 +714,52 @@ function HomepageTab() {
           shadow-sm
         "
       >
-        <SectionHeader title={t("admin.content.homepage.contactSection")} />
+        <SectionHeader
+          title={t(
+            "admin.content.homepage.contactSection",
+          )}
+        />
 
         <div className="grid gap-3 p-3 md:grid-cols-3 sm:p-4">
           <Input
-            label={t("admin.content.homepage.phone")}
+            label={t(
+              "admin.content.homepage.phone",
+            )}
             value={form.phone}
-            onChange={(event) => updateField("phone", event.target.value)}
+            onChange={(event) =>
+              updateField(
+                "phone",
+                event.target.value,
+              )
+            }
             dir="ltr"
           />
 
           <Input
-            label={t("admin.content.homepage.whatsapp")}
+            label={t(
+              "admin.content.homepage.whatsapp",
+            )}
             value={form.whatsapp}
-            onChange={(event) => updateField("whatsapp", event.target.value)}
+            onChange={(event) =>
+              updateField(
+                "whatsapp",
+                event.target.value,
+              )
+            }
             dir="ltr"
           />
 
           <Input
-            label={t("admin.content.homepage.address")}
+            label={t(
+              "admin.content.homepage.address",
+            )}
             value={form.address}
-            onChange={(event) => updateField("address", event.target.value)}
+            onChange={(event) =>
+              updateField(
+                "address",
+                event.target.value,
+              )
+            }
           />
         </div>
       </section>
@@ -581,7 +776,9 @@ function HomepageTab() {
         "
       >
         <SectionHeader
-          title={t("admin.content.homepage.openingHoursSection")}
+          title={t(
+            "admin.content.homepage.openingHoursSection",
+          )}
         />
 
         <div className="p-3 sm:p-4">
@@ -609,47 +806,71 @@ function HomepageTab() {
                   text-[var(--color-ink-600)]
                 "
               >
-                <span>{t("admin.content.homepage.day")}</span>
+                <span>
+                  {t(
+                    "admin.content.homepage.day",
+                  )}
+                </span>
 
-                <span>{t("admin.content.homepage.open")}</span>
+                <span>
+                  {t(
+                    "admin.content.homepage.open",
+                  )}
+                </span>
 
-                <span>{t("admin.content.homepage.close")}</span>
+                <span>
+                  {t(
+                    "admin.content.homepage.close",
+                  )}
+                </span>
               </div>
 
-              {form.openingHours.map((hour, index) => (
-                <div
-                  key={`${hour.day}-${index}`}
-                  className="
-                    grid
-                    grid-cols-[1.2fr_1fr_1fr]
-                    items-center
-                    gap-2
-                    border-b
-                    border-[var(--color-border)]
-                    px-3
-                    py-2
-                    last:border-b-0
-                  "
-                >
-                  <span className="text-xs font-medium text-[var(--color-ink-800)] sm:text-sm">
-                    {t(`admin.content.homepage.days.${hour.day}`)}
-                  </span>
+              {form.openingHours.map(
+                (hour, index) => (
+                  <div
+                    key={`${hour.day}-${index}`}
+                    className="
+                      grid
+                      grid-cols-[1.2fr_1fr_1fr]
+                      items-center
+                      gap-2
+                      border-b
+                      border-[var(--color-border)]
+                      px-3
+                      py-2
+                      last:border-b-0
+                    "
+                  >
+                    <span className="text-xs font-medium text-[var(--color-ink-800)] sm:text-sm">
+                      {t(
+                        `admin.content.homepage.days.${hour.day}`,
+                      )}
+                    </span>
 
-                  <TimeInput24
-                    value={hour.open}
-                    onChange={(value) =>
-                      updateOpeningHour(index, "open", value)
-                    }
-                  />
+                    <TimeInput24
+                      value={hour.open}
+                      onChange={(value) =>
+                        updateOpeningHour(
+                          index,
+                          "open",
+                          value,
+                        )
+                      }
+                    />
 
-                  <TimeInput24
-                    value={hour.close}
-                    onChange={(value) =>
-                      updateOpeningHour(index, "close", value)
-                    }
-                  />
-                </div>
-              ))}
+                    <TimeInput24
+                      value={hour.close}
+                      onChange={(value) =>
+                        updateOpeningHour(
+                          index,
+                          "close",
+                          value,
+                        )
+                      }
+                    />
+                  </div>
+                ),
+              )}
             </div>
           </div>
         </div>
@@ -666,27 +887,52 @@ function HomepageTab() {
           shadow-sm
         "
       >
-        <SectionHeader title={t("admin.content.homepage.socialSection")} />
+        <SectionHeader
+          title={t(
+            "admin.content.homepage.socialSection",
+          )}
+        />
 
         <div className="grid gap-3 p-3 md:grid-cols-3 sm:p-4">
           <Input
-            label={t("admin.content.homepage.instagram")}
+            label={t(
+              "admin.content.homepage.instagram",
+            )}
             value={form.instagram}
-            onChange={(event) => updateField("instagram", event.target.value)}
+            onChange={(event) =>
+              updateField(
+                "instagram",
+                event.target.value,
+              )
+            }
             dir="ltr"
           />
 
           <Input
-            label={t("admin.content.homepage.facebook")}
+            label={t(
+              "admin.content.homepage.facebook",
+            )}
             value={form.facebook}
-            onChange={(event) => updateField("facebook", event.target.value)}
+            onChange={(event) =>
+              updateField(
+                "facebook",
+                event.target.value,
+              )
+            }
             dir="ltr"
           />
 
           <Input
-            label={t("admin.content.homepage.tiktok")}
+            label={t(
+              "admin.content.homepage.tiktok",
+            )}
             value={form.tiktok}
-            onChange={(event) => updateField("tiktok", event.target.value)}
+            onChange={(event) =>
+              updateField(
+                "tiktok",
+                event.target.value,
+              )
+            }
             dir="ltr"
           />
         </div>
@@ -703,39 +949,60 @@ function HomepageTab() {
           shadow-sm
         "
       >
-        <SectionHeader title={t("admin.content.homepage.locationSection")} />
+        <SectionHeader
+          title={t(
+            "admin.content.homepage.locationSection",
+          )}
+        />
 
         <div className="space-y-3 p-3 sm:p-4">
           <div className="grid gap-3 sm:grid-cols-2">
             <Input
-              label={t("admin.content.homepage.googleRating")}
+              label={t(
+                "admin.content.homepage.googleRating",
+              )}
               type="number"
               step="0.1"
               min="0"
               max="5"
               value={form.googleRating}
               onChange={(event) =>
-                updateField("googleRating", event.target.value)
+                updateField(
+                  "googleRating",
+                  event.target.value,
+                )
               }
               dir="ltr"
             />
 
             <Input
-              label={t("admin.content.homepage.googleReviewCount")}
+              label={t(
+                "admin.content.homepage.googleReviewCount",
+              )}
               type="number"
               min="0"
               value={form.googleReviewCount}
               onChange={(event) =>
-                updateField("googleReviewCount", event.target.value)
+                updateField(
+                  "googleReviewCount",
+                  event.target.value,
+                )
               }
               dir="ltr"
             />
           </div>
 
           <Input
-            label={t("admin.content.homepage.mapEmbedUrl")}
+            label={t(
+              "admin.content.homepage.mapEmbedUrl",
+            )}
             value={form.mapEmbedUrl}
-            onChange={(event) => updateField("mapEmbedUrl", event.target.value)}
+            onChange={(event) =>
+              updateField(
+                "mapEmbedUrl",
+                event.target.value,
+              )
+            }
             dir="ltr"
           />
         </div>
@@ -749,7 +1016,9 @@ function HomepageTab() {
           size="lg"
           className="w-full sm:w-auto"
         >
-          {t("admin.content.homepage.save")}
+          {t(
+            "admin.content.homepage.save",
+          )}
         </Button>
       </div>
     </div>
@@ -764,36 +1033,87 @@ interface OffersTabProps {
   language: Language
 }
 
-function OffersTab({ language }: OffersTabProps) {
+function OffersTab({
+  language,
+}: OffersTabProps) {
   const { t } = useTranslation()
   const { showToast } = useToast()
 
   const {
     data: offers,
-    status,
-    error,
-    refetch,
-  } = useFetch(() => fetchOffers(), [])
+    status: offersStatus,
+    error: offersError,
+    refetch: refetchOffers,
+  } = useFetch(
+    () => fetchOffers(),
+    [],
+  )
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const {
+    data: plantsResponse,
+    status: plantsStatus,
+    error: plantsError,
+    refetch: refetchPlants,
+  } = useFetch(
+    () =>
+      fetchPlantsAdmin({
+        search: "",
+        limit: 50,
+      }),
+    [],
+  )
 
-  const [showForm, setShowForm] = useState(false)
+  const plants =
+    plantsResponse?.plants ?? []
 
-  const [editingOffer, setEditingOffer] = useState<Offer | null>(null)
+  const [isSubmitting, setIsSubmitting] =
+    useState(false)
 
-  const handleCreate = async (values: OfferFormValues, file: File | null) => {
+  const [showForm, setShowForm] =
+    useState(false)
+
+  const [creatingOfferType, setCreatingOfferType] =
+    useState<OfferType>("group")
+
+  const [editingOffer, setEditingOffer] =
+    useState<Offer | null>(null)
+
+  const groupOffers =
+    offers?.filter((offer) => offer.plants.length > 0) ?? []
+
+  const generalOffers =
+    offers?.filter((offer) => offer.plants.length === 0) ?? []
+
+  const handleCreate = async (
+    values: OfferFormValues,
+    file: File | null,
+  ) => {
     setIsSubmitting(true)
 
     try {
-      await createOffer(buildOfferFormData(values, file))
+      await createOffer(
+        buildOfferFormData(
+          values,
+          file,
+        ),
+      )
 
-      showToast(t("admin.content.offers.createSuccess"), "success")
+      showToast(
+        t(
+          "admin.content.offers.createSuccess",
+        ),
+        "success",
+      )
 
       setShowForm(false)
-      refetch()
+
+      refetchOffers()
     } catch (err: any) {
       showToast(
-        err?.response?.data?.message || t("admin.content.offers.createError"),
+        err?.response?.data?.message ||
+          t(
+            "admin.content.offers.createError",
+          ),
         "error",
       )
     } finally {
@@ -801,7 +1121,10 @@ function OffersTab({ language }: OffersTabProps) {
     }
   }
 
-  const handleUpdate = async (values: OfferFormValues, file: File | null) => {
+  const handleUpdate = async (
+    values: OfferFormValues,
+    file: File | null,
+  ) => {
     if (!editingOffer) {
       return
     }
@@ -809,15 +1132,30 @@ function OffersTab({ language }: OffersTabProps) {
     setIsSubmitting(true)
 
     try {
-      await updateOffer(editingOffer._id, buildOfferFormData(values, file))
+      await updateOffer(
+        editingOffer._id,
+        buildOfferFormData(
+          values,
+          file,
+        ),
+      )
 
-      showToast(t("admin.content.offers.updateSuccess"), "success")
+      showToast(
+        t(
+          "admin.content.offers.updateSuccess",
+        ),
+        "success",
+      )
 
       setEditingOffer(null)
-      refetch()
+
+      refetchOffers()
     } catch (err: any) {
       showToast(
-        err?.response?.data?.message || t("admin.content.offers.updateError"),
+        err?.response?.data?.message ||
+          t(
+            "admin.content.offers.updateError",
+          ),
         "error",
       )
     } finally {
@@ -825,186 +1163,419 @@ function OffersTab({ language }: OffersTabProps) {
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm(t("admin.content.offers.deleteConfirmation"))) {
+  const handleDelete = async (
+    id: string,
+  ) => {
+    if (
+      !confirm(
+        t(
+          "admin.content.offers.deleteConfirmation",
+        ),
+      )
+    ) {
       return
     }
 
     try {
       await deleteOffer(id)
 
-      showToast(t("admin.content.offers.deleteSuccess"), "success")
+      showToast(
+        t(
+          "admin.content.offers.deleteSuccess",
+        ),
+        "success",
+      )
 
-      refetch()
+      refetchOffers()
     } catch {
-      showToast(t("admin.content.offers.deleteError"), "error")
+      showToast(
+        t(
+          "admin.content.offers.deleteError",
+        ),
+        "error",
+      )
     }
   }
 
-  if (status === "loading") {
-    return <Skeleton className="h-56 w-full rounded-xl" />
+  const isLoading =
+    offersStatus === "loading" ||
+    plantsStatus === "loading"
+
+  if (isLoading) {
+    return (
+      <Skeleton className="h-56 w-full rounded-xl" />
+    )
   }
 
-  if (status === "error") {
-    return <ErrorState message={error ?? undefined} onRetry={refetch} />
+  if (offersStatus === "error") {
+    return (
+      <ErrorState
+        message={offersError ?? undefined}
+        onRetry={() => {
+          refetchOffers()
+          refetchPlants()
+        }}
+      />
+    )
+  }
+
+  if (plantsStatus === "error") {
+    return (
+      <ErrorState
+        message={plantsError ?? undefined}
+        onRetry={() => {
+          refetchOffers()
+          refetchPlants()
+        }}
+      />
+    )
   }
 
   return (
     <div>
       {!showForm && !editingOffer && (
-        <div className="mb-4 flex justify-end">
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
           <Button
-            onClick={() => setShowForm(true)}
+            onClick={() => {
+              setCreatingOfferType("group")
+              setShowForm(true)
+            }}
             className="w-full sm:w-auto"
           >
-            {t("admin.content.offers.add")}
+            {t("admin.content.offers.addGroup")}
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={() => {
+              setCreatingOfferType("general")
+              setShowForm(true)
+            }}
+            className="w-full sm:w-auto"
+          >
+            {t("admin.content.offers.addGeneral")}
           </Button>
         </div>
       )}
 
       {showForm && (
         <Card className="mb-4 p-3 sm:p-4">
-          <FormHeader title={t("admin.content.offers.addTitle")} />
+          <FormHeader
+            title={t(
+              "admin.content.offers.addTitle",
+            )}
+          />
 
           <OfferForm
+            type={creatingOfferType}
+            plants={plants}
             onSubmit={handleCreate}
             isSubmitting={isSubmitting}
-            onCancel={() => setShowForm(false)}
+            onCancel={() =>
+              setShowForm(false)
+            }
           />
         </Card>
       )}
 
       {editingOffer && (
         <Card className="mb-4 p-3 sm:p-4">
-          <FormHeader title={t("admin.content.offers.editTitle")} />
+          <FormHeader
+            title={t(
+              "admin.content.offers.editTitle",
+            )}
+          />
 
           <OfferForm
             initial={editingOffer}
+            type={editingOffer.plants.length > 0 ? "group" : "general"}
+            plants={plants}
             onSubmit={handleUpdate}
             isSubmitting={isSubmitting}
-            onCancel={() => setEditingOffer(null)}
+            onCancel={() =>
+              setEditingOffer(null)
+            }
           />
         </Card>
       )}
 
       {(offers?.length ?? 0) === 0 && (
         <EmptyState
-          title={t("admin.content.offers.emptyTitle")}
-          description={t("admin.content.offers.emptyDescription")}
+          title={t(
+            "admin.content.offers.emptyTitle",
+          )}
+          description={t(
+            "admin.content.offers.emptyDescription",
+          )}
         />
       )}
 
-      {offers && offers.length > 0 && (
-        <div
-          className="
-            overflow-hidden
-            rounded-xl
-            border
-            border-[var(--color-border)]
-            bg-white
-            shadow-sm
-          "
-        >
-          {offers.map((offer) => {
-            const title = offer.title[language]
+      {offers &&
+        offers.length > 0 && (
+          <div className="space-y-8">
+            <OfferAdminSection
+              title={t("admin.content.offers.groupSection")}
+              description={t("admin.content.offers.groupDescription")}
+              offers={groupOffers}
+              language={language}
+              onEdit={setEditingOffer}
+              onDelete={handleDelete}
+            />
 
-            const description = offer.description[language]
+            <OfferAdminSection
+              title={t("admin.content.offers.generalSection")}
+              description={t("admin.content.offers.generalDescription")}
+              offers={generalOffers}
+              language={language}
+              onEdit={setEditingOffer}
+              onDelete={handleDelete}
+            />
 
-            return (
-              <div
-                key={offer._id}
-                className="
-                  grid
-                  gap-3
-                  border-b
-                  border-[var(--color-border)]
-                  p-3
-                  last:border-b-0
-                  sm:grid-cols-[80px_1fr_auto]
-                  sm:items-center
-                  sm:p-4
-                "
-              >
-                {offer.image?.url ? (
-                  <img
-                    src={offer.image.url}
-                    alt={title}
-                    className="
-                      h-16
-                      w-20
-                      rounded-lg
-                      object-cover
-                    "
-                  />
-                ) : (
-                  <div
-                    className="
-                      h-16
-                      w-20
-                      rounded-lg
-                      bg-[var(--color-sage-100)]
-                    "
-                  />
-                )}
+            <PlantDiscountAdminSection plants={plants} />
+          </div>
+        )}
+    </div>
+  )
+}
 
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="break-words text-sm font-semibold text-[var(--color-forest-800)]">
-                      {title}
+interface OfferAdminSectionProps {
+  title: string
+  description: string
+  offers: Offer[]
+  language: Language
+  onEdit: (offer: Offer) => void
+  onDelete: (id: string) => void
+}
+
+function OfferAdminSection({
+  title,
+  description,
+  offers,
+  language,
+  onEdit,
+  onDelete,
+}: OfferAdminSectionProps) {
+  const { t } = useTranslation()
+
+  return (
+    <section>
+      <div className="mb-3">
+        <h2 className="font-display text-lg text-[var(--color-forest-800)]">{title}</h2>
+        <p className="mt-1 text-xs text-[var(--color-ink-500)]">{description}</p>
+      </div>
+
+      {offers.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-[var(--color-border)] p-4 text-sm text-[var(--color-ink-500)]">
+          {t("admin.content.offers.sectionEmpty")}
+        </div>
+      ) : (
+          <div
+            className="
+              overflow-hidden
+              rounded-xl
+              border
+              border-[var(--color-border)]
+              bg-white
+              shadow-sm
+            "
+          >
+            {offers.map((offer) => {
+              const title =
+                offer.title[language]
+
+              const description =
+                offer.description[language]
+
+              return (
+                <div
+                  key={offer._id}
+                  className="
+                    grid
+                    gap-3
+                    border-b
+                    border-[var(--color-border)]
+                    p-3
+                    last:border-b-0
+                    sm:grid-cols-[80px_1fr_auto]
+                    sm:items-center
+                    sm:p-4
+                  "
+                >
+                  {offer.image?.url ? (
+                    <img
+                      src={offer.image.url}
+                      alt={title}
+                      className="
+                        h-16
+                        w-20
+                        rounded-lg
+                        object-cover
+                      "
+                    />
+                  ) : (
+                    <div
+                      className="
+                        h-16
+                        w-20
+                        rounded-lg
+                        bg-[var(--color-sage-100)]
+                      "
+                    />
+                  )}
+
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="break-words text-sm font-semibold text-[var(--color-forest-800)]">
+                        {title}
+                      </p>
+
+                      <Badge
+                        variant={
+                          offer.isActive
+                            ? "success"
+                            : "neutral"
+                        }
+                      >
+                        {offer.isActive
+                          ? t(
+                              "admin.content.offers.active",
+                            )
+                          : t(
+                              "admin.content.offers.inactive",
+                            )}
+                      </Badge>
+                    </div>
+
+                    <p className="mt-1 line-clamp-2 text-xs leading-5 text-[var(--color-ink-600)]">
+                      {description}
                     </p>
 
-                    <Badge variant={offer.isActive ? "success" : "neutral"}>
-                      {offer.isActive
-                        ? t("admin.content.offers.active")
-                        : t("admin.content.offers.inactive")}
-                    </Badge>
+                    {(offer.startDate ||
+                      offer.endDate) && (
+                      <p
+                        className="
+                          mt-1
+                          text-[11px]
+                          text-[var(--color-ink-500)]
+                        "
+                        dir="ltr"
+                      >
+                        {offer.startDate
+                          ? new Date(
+                              offer.startDate,
+                            ).toLocaleDateString(
+                              "en-GB",
+                            )
+                          : "—"}
+
+                        {" → "}
+
+                        {offer.endDate
+                          ? new Date(
+                              offer.endDate,
+                            ).toLocaleDateString(
+                              "en-GB",
+                            )
+                          : "—"}
+                      </p>
+                    )}
                   </div>
 
-                  <p className="mt-1 line-clamp-2 text-xs leading-5 text-[var(--color-ink-600)]">
-                    {description}
-                  </p>
-
-                  {(offer.startDate || offer.endDate) && (
-                    <p
-                      className="mt-1 text-[11px] text-[var(--color-ink-500)]"
-                      dir="ltr"
+                  <div className="grid grid-cols-2 gap-2 sm:flex">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() =>
+                        onEdit(offer)
+                      }
                     >
-                      {offer.startDate
-                        ? new Date(offer.startDate).toLocaleDateString("en-GB")
-                        : "—"}
+                      {t(
+                        "admin.content.offers.edit",
+                      )}
+                    </Button>
 
-                      {" → "}
-
-                      {offer.endDate
-                        ? new Date(offer.endDate).toLocaleDateString("en-GB")
-                        : "—"}
-                    </p>
-                  )}
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      onClick={() =>
+                        onDelete(offer._id)
+                      }
+                    >
+                      {t(
+                        "admin.content.offers.delete",
+                      )}
+                    </Button>
+                  </div>
                 </div>
+              )
+            })}
+          </div>
+        )}
+    </section>
+  )
+}
 
-                <div className="grid grid-cols-2 gap-2 sm:flex">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setEditingOffer(offer)}
-                  >
-                    {t("admin.content.offers.edit")}
-                  </Button>
+interface PlantDiscountAdminSectionProps {
+  plants: Plant[]
+}
 
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    onClick={() => handleDelete(offer._id)}
-                  >
-                    {t("admin.content.offers.delete")}
-                  </Button>
-                </div>
+function PlantDiscountAdminSection({
+  plants,
+}: PlantDiscountAdminSectionProps) {
+  const { t, i18n } = useTranslation()
+  const language = i18n.language.startsWith("ar") ? "ar" : "he"
+  const discountedPlants = plants.filter(
+    (plant) => plant.offer?.enabled,
+  )
+
+  return (
+    <section>
+      <div className="mb-3">
+        <h2 className="font-display text-lg text-[var(--color-forest-800)]">
+          {t("admin.content.offers.plantSection")}
+        </h2>
+        <p className="mt-1 text-xs text-[var(--color-ink-500)]">
+          {t("admin.content.offers.plantDescription")}
+        </p>
+      </div>
+
+      {discountedPlants.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-[var(--color-border)] p-4 text-sm text-[var(--color-ink-500)]">
+          {t("admin.content.offers.sectionEmpty")}
+        </div>
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {discountedPlants.map((plant) => (
+            <div
+              key={plant._id}
+              className="flex items-center gap-3 rounded-xl border border-[var(--color-border)] bg-white p-3"
+            >
+              <img
+                src={plant.images[0]?.url || "/placeholders/plant-placeholder.svg"}
+                alt={plant.name[language]}
+                className="h-14 w-14 rounded-lg object-cover"
+              />
+              <div className="min-w-0 flex-1" dir="rtl">
+                <p className="truncate text-sm font-semibold text-[var(--color-forest-800)]">
+                  {plant.name[language]}
+                </p>
+                <p className="text-xs text-[var(--color-ink-500)]" dir="ltr">
+                  {plant.price != null ? `₪${plant.price}` : t("plant.priceOnRequest")}
+                  {" -> "}
+                  {plant.offer?.price != null ? `₪${plant.offer.price}` : t("plant.priceOnRequest")}
+                </p>
               </div>
-            )
-          })}
+              <Link
+                to={`/admin/plants/${plant._id}/edit`}
+                className="shrink-0 text-xs font-medium text-[var(--color-forest-700)] hover:underline"
+              >
+                {t("admin.content.offers.managePlant")}
+              </Link>
+            </div>
+          ))}
         </div>
       )}
-    </div>
+    </section>
   )
 }
 
@@ -1016,7 +1587,9 @@ interface TestimonialsTabProps {
   language: Language
 }
 
-function TestimonialsTab({ language }: TestimonialsTabProps) {
+function TestimonialsTab({
+  language,
+}: TestimonialsTabProps) {
   const { t } = useTranslation()
   const { showToast } = useToast()
 
@@ -1025,29 +1598,46 @@ function TestimonialsTab({ language }: TestimonialsTabProps) {
     status,
     error,
     refetch,
-  } = useFetch(fetchAllTestimonials, [])
+  } = useFetch(
+    fetchAllTestimonials,
+    [],
+  )
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] =
+    useState(false)
 
-  const [showForm, setShowForm] = useState(false)
+  const [showForm, setShowForm] =
+    useState(false)
 
-  const [editingTestimonial, setEditingTestimonial] =
-    useState<Testimonial | null>(null)
+  const [
+    editingTestimonial,
+    setEditingTestimonial,
+  ] = useState<Testimonial | null>(null)
 
-  const handleCreate = async (values: TestimonialFormValues) => {
+  const handleCreate = async (
+    values: TestimonialFormValues,
+  ) => {
     setIsSubmitting(true)
 
     try {
       await createTestimonial(values)
 
-      showToast(t("admin.content.testimonials.createSuccess"), "success")
+      showToast(
+        t(
+          "admin.content.testimonials.createSuccess",
+        ),
+        "success",
+      )
 
       setShowForm(false)
+
       refetch()
     } catch (err: any) {
       showToast(
         err?.response?.data?.message ||
-          t("admin.content.testimonials.createError"),
+          t(
+            "admin.content.testimonials.createError",
+          ),
         "error",
       )
     } finally {
@@ -1055,7 +1645,9 @@ function TestimonialsTab({ language }: TestimonialsTabProps) {
     }
   }
 
-  const handleUpdate = async (values: TestimonialFormValues) => {
+  const handleUpdate = async (
+    values: TestimonialFormValues,
+  ) => {
     if (!editingTestimonial) {
       return
     }
@@ -1063,16 +1655,27 @@ function TestimonialsTab({ language }: TestimonialsTabProps) {
     setIsSubmitting(true)
 
     try {
-      await updateTestimonial(editingTestimonial._id, values)
+      await updateTestimonial(
+        editingTestimonial._id,
+        values,
+      )
 
-      showToast(t("admin.content.testimonials.updateSuccess"), "success")
+      showToast(
+        t(
+          "admin.content.testimonials.updateSuccess",
+        ),
+        "success",
+      )
 
       setEditingTestimonial(null)
+
       refetch()
     } catch (err: any) {
       showToast(
         err?.response?.data?.message ||
-          t("admin.content.testimonials.updateError"),
+          t(
+            "admin.content.testimonials.updateError",
+          ),
         "error",
       )
     } finally {
@@ -1080,167 +1683,253 @@ function TestimonialsTab({ language }: TestimonialsTabProps) {
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm(t("admin.content.testimonials.deleteConfirmation"))) {
+  const handleDelete = async (
+    id: string,
+  ) => {
+    if (
+      !confirm(
+        t(
+          "admin.content.testimonials.deleteConfirmation",
+        ),
+      )
+    ) {
       return
     }
 
     try {
       await deleteTestimonial(id)
 
-      showToast(t("admin.content.testimonials.deleteSuccess"), "success")
+      showToast(
+        t(
+          "admin.content.testimonials.deleteSuccess",
+        ),
+        "success",
+      )
 
       refetch()
     } catch {
-      showToast(t("admin.content.testimonials.deleteError"), "error")
+      showToast(
+        t(
+          "admin.content.testimonials.deleteError",
+        ),
+        "error",
+      )
     }
   }
 
   if (status === "loading") {
-    return <Skeleton className="h-56 w-full rounded-xl" />
+    return (
+      <Skeleton className="h-56 w-full rounded-xl" />
+    )
   }
 
   if (status === "error") {
-    return <ErrorState message={error ?? undefined} onRetry={refetch} />
+    return (
+      <ErrorState
+        message={error ?? undefined}
+        onRetry={refetch}
+      />
+    )
   }
 
   return (
     <div>
-      {!showForm && !editingTestimonial && (
-        <div className="mb-4 flex justify-end">
-          <Button
-            onClick={() => setShowForm(true)}
-            className="w-full sm:w-auto"
-          >
-            {t("admin.content.testimonials.add")}
-          </Button>
-        </div>
-      )}
+      {!showForm &&
+        !editingTestimonial && (
+          <div className="mb-4 flex justify-end">
+            <Button
+              onClick={() =>
+                setShowForm(true)
+              }
+              className="w-full sm:w-auto"
+            >
+              {t(
+                "admin.content.testimonials.add",
+              )}
+            </Button>
+          </div>
+        )}
 
       {showForm && (
         <Card className="mb-4 p-3 sm:p-4">
-          <FormHeader title={t("admin.content.testimonials.addTitle")} />
+          <FormHeader
+            title={t(
+              "admin.content.testimonials.addTitle",
+            )}
+          />
 
           <TestimonialForm
             onSubmit={handleCreate}
             isSubmitting={isSubmitting}
-            onCancel={() => setShowForm(false)}
+            onCancel={() =>
+              setShowForm(false)
+            }
           />
         </Card>
       )}
 
       {editingTestimonial && (
         <Card className="mb-4 p-3 sm:p-4">
-          <FormHeader title={t("admin.content.testimonials.editTitle")} />
+          <FormHeader
+            title={t(
+              "admin.content.testimonials.editTitle",
+            )}
+          />
 
           <TestimonialForm
             initial={editingTestimonial}
             onSubmit={handleUpdate}
             isSubmitting={isSubmitting}
-            onCancel={() => setEditingTestimonial(null)}
+            onCancel={() =>
+              setEditingTestimonial(
+                null,
+              )
+            }
           />
         </Card>
       )}
 
       {(testimonials?.length ?? 0) === 0 && (
         <EmptyState
-          title={t("admin.content.testimonials.emptyTitle")}
-          description={t("admin.content.testimonials.emptyDescription")}
+          title={t(
+            "admin.content.testimonials.emptyTitle",
+          )}
+          description={t(
+            "admin.content.testimonials.emptyDescription",
+          )}
         />
       )}
 
-      {testimonials && testimonials.length > 0 && (
-        <div
-          className="
-            overflow-hidden
-            rounded-xl
-            border
-            border-[var(--color-border)]
-            bg-white
-            shadow-sm
-          "
-        >
-          {testimonials.map((testimonial) => {
-            const text = testimonial.text[language]
+      {testimonials &&
+        testimonials.length > 0 && (
+          <div
+            className="
+              overflow-hidden
+              rounded-xl
+              border
+              border-[var(--color-border)]
+              bg-white
+              shadow-sm
+            "
+          >
+            {testimonials.map(
+              (testimonial) => {
+                const text =
+                  testimonial.text[
+                    language
+                  ]
 
-            return (
-              <div
-                key={testimonial._id}
-                className="
-                  grid
-                  gap-3
-                  border-b
-                  border-[var(--color-border)]
-                  p-3
-                  last:border-b-0
-                  sm:grid-cols-[1fr_auto]
-                  sm:items-center
-                  sm:p-4
-                "
-              >
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="break-words text-sm font-semibold text-[var(--color-forest-800)]">
-                      {testimonial.customerName}
-                    </p>
-
-                    <Badge
-                      variant={testimonial.isVisible ? "success" : "neutral"}
-                    >
-                      {testimonial.isVisible
-                        ? t("admin.content.testimonials.visible")
-                        : t("admin.content.testimonials.hidden")}
-                    </Badge>
-                  </div>
-
+                return (
                   <div
+                    key={testimonial._id}
                     className="
-                      mt-1
-                      text-xs
-                      tracking-wide
-                      text-[var(--color-forest-700)]
+                      grid
+                      gap-3
+                      border-b
+                      border-[var(--color-border)]
+                      p-3
+                      last:border-b-0
+                      sm:grid-cols-[1fr_auto]
+                      sm:items-center
+                      sm:p-4
                     "
-                    aria-label={t("admin.content.testimonials.ratingLabel")}
                   >
-                    {"★".repeat(testimonial.rating)}
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="break-words text-sm font-semibold text-[var(--color-forest-800)]">
+                          {
+                            testimonial.customerName
+                          }
+                        </p>
+
+                        <Badge
+                          variant={
+                            testimonial.isVisible
+                              ? "success"
+                              : "neutral"
+                          }
+                        >
+                          {testimonial.isVisible
+                            ? t(
+                                "admin.content.testimonials.visible",
+                              )
+                            : t(
+                                "admin.content.testimonials.hidden",
+                              )}
+                        </Badge>
+                      </div>
+
+                      <div
+                        className="
+                          mt-1
+                          text-xs
+                          tracking-wide
+                          text-[var(--color-forest-700)]
+                        "
+                        aria-label={t(
+                          "admin.content.testimonials.ratingLabel",
+                        )}
+                      >
+                        {"★".repeat(
+                          testimonial.rating,
+                        )}
+                      </div>
+
+                      <p className="mt-1 line-clamp-2 text-xs leading-5 text-[var(--color-ink-600)]">
+                        {text}
+                      </p>
+
+                      <p
+                        className="
+                          mt-1
+                          text-[11px]
+                          text-[var(--color-ink-400)]
+                        "
+                        dir="ltr"
+                      >
+                        {new Date(
+                          testimonial.createdAt,
+                        ).toLocaleDateString(
+                          "en-GB",
+                        )}
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 sm:flex">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          setEditingTestimonial(
+                            testimonial,
+                          )
+                        }
+                      >
+                        {t(
+                          "admin.content.testimonials.edit",
+                        )}
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        variant="danger"
+                        onClick={() =>
+                          handleDelete(
+                            testimonial._id,
+                          )
+                        }
+                      >
+                        {t(
+                          "admin.content.testimonials.delete",
+                        )}
+                      </Button>
+                    </div>
                   </div>
-
-                  <p className="mt-1 line-clamp-2 text-xs leading-5 text-[var(--color-ink-600)]">
-                    {text}
-                  </p>
-
-                  <p
-                    className="mt-1 text-[11px] text-[var(--color-ink-400)]"
-                    dir="ltr"
-                  >
-                    {new Date(testimonial.createdAt).toLocaleDateString(
-                      "en-GB",
-                    )}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 sm:flex">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setEditingTestimonial(testimonial)}
-                  >
-                    {t("admin.content.testimonials.edit")}
-                  </Button>
-
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    onClick={() => handleDelete(testimonial._id)}
-                  >
-                    {t("admin.content.testimonials.delete")}
-                  </Button>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
+                )
+              },
+            )}
+          </div>
+        )}
     </div>
   )
 }
@@ -1254,33 +1943,53 @@ interface TimeInput24Props {
   onChange: (value: string) => void
 }
 
-function TimeInput24({ value, onChange }: TimeInput24Props) {
-  const [hour = "", minute = ""] = value ? value.split(":") : []
+function TimeInput24({
+  value,
+  onChange,
+}: TimeInput24Props) {
+  const [
+    hour = "",
+    minute = "",
+  ] = value
+    ? value.split(":")
+    : []
 
-  const hours = Array.from({ length: 24 }, (_, index) =>
-    String(index).padStart(2, "0"),
+  const hours = Array.from(
+    { length: 24 },
+    (_, index) =>
+      String(index).padStart(2, "0"),
   )
 
-  const minutes = Array.from({ length: 60 }, (_, index) =>
-    String(index).padStart(2, "0"),
+  const minutes = Array.from(
+    { length: 60 },
+    (_, index) =>
+      String(index).padStart(2, "0"),
   )
 
-  const handleHourChange = (newHour: string) => {
+  const handleHourChange = (
+    newHour: string,
+  ) => {
     if (!newHour) {
       onChange("")
       return
     }
 
-    onChange(`${newHour}:${minute || "00"}`)
+    onChange(
+      `${newHour}:${minute || "00"}`,
+    )
   }
 
-  const handleMinuteChange = (newMinute: string) => {
+  const handleMinuteChange = (
+    newMinute: string,
+  ) => {
     if (!newMinute) {
       onChange("")
       return
     }
 
-    onChange(`${hour || "00"}:${newMinute}`)
+    onChange(
+      `${hour || "00"}:${newMinute}`,
+    )
   }
 
   const selectClassName = `
@@ -1300,17 +2009,27 @@ function TimeInput24({ value, onChange }: TimeInput24Props) {
   `
 
   return (
-    <div className="flex items-center gap-1" dir="ltr">
+    <div
+      className="flex items-center gap-1"
+      dir="ltr"
+    >
       <select
         value={hour}
-        onChange={(event) => handleHourChange(event.target.value)}
+        onChange={(event) =>
+          handleHourChange(
+            event.target.value,
+          )
+        }
         aria-label="Hour"
         className={selectClassName}
       >
         <option value="">--</option>
 
         {hours.map((item) => (
-          <option key={item} value={item}>
+          <option
+            key={item}
+            value={item}
+          >
             {item}
           </option>
         ))}
@@ -1329,14 +2048,21 @@ function TimeInput24({ value, onChange }: TimeInput24Props) {
 
       <select
         value={minute}
-        onChange={(event) => handleMinuteChange(event.target.value)}
+        onChange={(event) =>
+          handleMinuteChange(
+            event.target.value,
+          )
+        }
         aria-label="Minute"
         className={selectClassName}
       >
         <option value="">--</option>
 
         {minutes.map((item) => (
-          <option key={item} value={item}>
+          <option
+            key={item}
+            value={item}
+          >
             {item}
           </option>
         ))}
@@ -1353,7 +2079,9 @@ interface SectionHeaderProps {
   title: string
 }
 
-function SectionHeader({ title }: SectionHeaderProps) {
+function SectionHeader({
+  title,
+}: SectionHeaderProps) {
   return (
     <div
       className="
@@ -1383,7 +2111,9 @@ interface FormHeaderProps {
   title: string
 }
 
-function FormHeader({ title }: FormHeaderProps) {
+function FormHeader({
+  title,
+}: FormHeaderProps) {
   return (
     <div className="mb-4">
       <h2

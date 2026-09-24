@@ -17,7 +17,9 @@ export const galleryCreateSchema = z.object({
 export const galleryUpdateSchema = z.object({
   body: galleryCreateSchema.shape.body.partial(),
   query: z.object({}).optional(),
-  params: z.object({ id: z.string().trim().min(1) }),
+  params: z.object({
+    id: z.string().trim().regex(/^[0-9a-fA-F]{24}$/, 'Invalid gallery ID'),
+  }),
 });
 
 export type GalleryCreateInput = z.infer<typeof galleryCreateSchema>['body'];

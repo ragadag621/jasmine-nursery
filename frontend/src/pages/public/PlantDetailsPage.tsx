@@ -74,7 +74,22 @@ export default function PlantDetailsPage() {
     partial_shade: t('plant.sunPartial'),
     full_shade: t('plant.sunShade'),
   }[plant.care.sunlight];
-  const price = plant.price != null ? `₪${plant.price.toLocaleString('he-IL')}` : t('plant.priceOnRequest');
+  const isOfferActive = (() => {
+    if (!plant.offer?.enabled || plant.offer.price == null) return false;
+
+    const now = new Date();
+    const startDate = plant.offer.startDate ? new Date(plant.offer.startDate) : null;
+    const endDate = plant.offer.endDate ? new Date(plant.offer.endDate) : null;
+
+    if (startDate && startDate > now) return false;
+    if (endDate && endDate < now) return false;
+
+    return true;
+  })();
+
+  const originalPrice = plant.price != null ? `₪${plant.price.toLocaleString('he-IL')}` : t('plant.priceOnRequest');
+  const discountedPrice =
+    isOfferActive && plant.offer?.price != null ? `₪${plant.offer.price.toLocaleString('he-IL')}` : null;
   const whatsappHref = formatWhatsAppLink(
     content?.whatsapp || content?.phone || '972546643896',
     `שלום, מעוניין/ת ב${plant.name.he}`
@@ -122,7 +137,21 @@ export default function PlantDetailsPage() {
           {plant.scientificName && (
             <p className="mb-4 text-sm italic text-[var(--color-ink-600)]">{plant.scientificName}</p>
           )}
-          <p className="font-display mb-5 text-2xl text-[var(--color-forest-700)]">{price}</p>
+          <div className="mb-5 flex flex-col gap-2">
+            {discountedPrice ? (
+              <>
+                <p className="text-sm text-[var(--color-ink-500)] line-through">{t('plant.originalPrice')}: {originalPrice}</p>
+                <p className="font-display text-2xl text-[var(--color-forest-700)]">
+                  {t('plant.discountedPrice')}: {discountedPrice}
+                </p>
+              </>
+            ) : (
+              <p className="font-display text-2xl text-[var(--color-forest-700)]">{originalPrice}</p>
+            )}
+            {plant.offer?.enabled && !isOfferActive && (
+              <p className="text-sm text-[var(--color-ink-600)]">{t('plant.offerInactive')}</p>
+            )}
+          </div>
           <p className="mb-7 leading-relaxed text-[var(--color-ink-900)]">{plant.description[key]}</p>
 
           <Card className="mb-7 grid grid-cols-2 gap-4 p-5">

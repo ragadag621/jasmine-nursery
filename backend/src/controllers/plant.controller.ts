@@ -23,6 +23,36 @@ const SORT_MAP: Record<string, Record<string, 1 | -1>> = {
 
 const MIN_FUZZY_MATCH_LENGTH = 4;
 
+const slugify = (value: string): string => {
+  return value
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};
+
+const buildPlantSlug = (input: PlantCreateInput, id: string): string => {
+  const source = input.scientificName || input.name.he || input.name.ar;
+  return slugify(source) || `plant-${id.slice(-8).toLowerCase()}`;
+};
+
+const getUniquePlantSlug = async (
+  input: PlantCreateInput,
+  id: string,
+): Promise<string> => {
+  const baseSlug = buildPlantSlug(input, id);
+  let slug = baseSlug;
+  let suffix = 2;
+
+  while (await Plant.exists({ slug })) {
+    slug = `${baseSlug}-${suffix}`;
+    suffix += 1;
+  }
+
+  return slug;
+};
+
 /**
  * Escapes special regex characters so user input is treated
  * as plain text rather than as a regular expression.
@@ -298,9 +328,10 @@ export const createPlant = asyncHandler(
     const files =
       (req.files as Express.Multer.File[] | undefined) ?? [];
 
-    const existing = await Plant.findOne({ slug: input.slug });
+    const plantId = new Plant()._id.toString();
+    const slug = input.slug || await getUniquePlantSlug(input, plantId);
 
-    if (existing) {
+    if (input.slug && await Plant.exists({ slug: input.slug })) {
       throw ApiError.conflict(
         `A plant with slug "${input.slug}" already exists`
       );
@@ -317,6 +348,8 @@ export const createPlant = asyncHandler(
     try {
       const plant = await Plant.create({
         ...input,
+        _id: plantId,
+        slug,
         images,
       });
 

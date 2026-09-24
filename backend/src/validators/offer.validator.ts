@@ -7,33 +7,57 @@ const localizedTextSchema = z.object({
 
 const booleanFromFormData = z.preprocess(
   (value) => {
-    if (value === 'true') {
-      return true;
-    }
-
-    if (value === 'false') {
-      return false;
-    }
-
+    if (value === 'true') return true;
+    if (value === 'false') return false;
     return value;
   },
   z.boolean(),
 );
 
+const plantIdsFromFormData = z.preprocess(
+  (value) => {
+    if (typeof value === 'string') {
+      try {
+        const parsed = JSON.parse(value);
+
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
+      } catch {
+        // Let Zod reject the original value below.
+      }
+
+      return [value];
+    }
+
+    return value;
+  },
+  z
+    .array(
+      z
+        .string()
+        .trim()
+        .regex(/^[0-9a-fA-F]{24}$/, 'Invalid plant ID'),
+    )
+    .default([]),
+);
+
+const offerBodySchema = z.object({
+  title: localizedTextSchema,
+
+  description: localizedTextSchema,
+
+  plants: plantIdsFromFormData,
+
+  startDate: z.coerce.date().optional(),
+
+  endDate: z.coerce.date().optional(),
+
+  isActive: booleanFromFormData.optional().default(true),
+});
+
 export const offerCreateSchema = z.object({
-  body: z.object({
-    title: localizedTextSchema,
-
-    description: localizedTextSchema,
-
-    startDate: z.coerce.date().optional(),
-
-    endDate: z.coerce.date().optional(),
-
-    isActive: booleanFromFormData
-      .optional()
-      .default(true),
-  }),
+  body: offerBodySchema,
 
   query: z.object({}).optional(),
 
@@ -41,12 +65,15 @@ export const offerCreateSchema = z.object({
 });
 
 export const offerUpdateSchema = z.object({
-  body: offerCreateSchema.shape.body.partial(),
+  body: offerBodySchema.partial(),
 
   query: z.object({}).optional(),
 
   params: z.object({
-    id: z.string().trim().min(1),
+    id: z
+      .string()
+      .trim()
+      .regex(/^[0-9a-fA-F]{24}$/, 'Invalid offer ID'),
   }),
 });
 

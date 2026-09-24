@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
+import { formatWhatsAppLink } from '@/utils/formatters';
 
 import type {
   ContactMessage,
@@ -60,6 +61,18 @@ export function MessagesTable({
       "
       onClick={(event) => event.stopPropagation()}
     >
+      {msg.phone.trim() && (
+        <a
+          href={formatWhatsAppLink(msg.phone)}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(event) => event.stopPropagation()}
+          className="inline-flex min-h-9 shrink-0 items-center justify-center rounded-md bg-[#25D366] px-2.5 text-xs font-medium text-white transition hover:bg-[#1fb956] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2"
+        >
+          {t('admin.messages.actions.whatsapp')}
+        </a>
+      )}
+
       {msg.status !== 'read' && (
         <Button
           size="sm"

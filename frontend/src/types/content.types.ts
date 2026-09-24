@@ -1,4 +1,4 @@
-import type { LocalizedText } from './plant.types';
+import type { LocalizedText, Plant } from './plant.types';
 
 export interface OpeningHour {
   day: string;
@@ -7,9 +7,17 @@ export interface OpeningHour {
 }
 
 export interface SiteContent {
+  siteName: LocalizedText;
   heroTitle: LocalizedText;
   heroSubtitle: LocalizedText;
-  heroImage?: { url: string; publicId: string };
+  heroImage?: {
+    url: string;
+    publicId: string;
+  };
+  logo?: {
+    url: string;
+    publicId: string;
+  };
   aboutText: LocalizedText;
   phone: string;
   whatsapp: string;
@@ -36,10 +44,45 @@ export interface Testimonial {
 
 export interface Offer {
   _id: string;
+
   title: LocalizedText;
+
   description: LocalizedText;
-  image?: { url: string; publicId: string };
+
+  image?: {
+    url: string;
+    publicId: string;
+  };
+
+  /**
+   * IDs of plants included in this general offer.
+   *
+   * The backend currently returns ObjectId values
+   * as strings when the offer is not populated.
+   */
+  plants: string[];
+
   startDate?: string;
+
   endDate?: string;
+
   isActive: boolean;
 }
+
+export interface OfferPlant {
+  _id: string;
+  name: LocalizedText;
+  description: LocalizedText;
+  slug: string;
+  price?: number;
+  availability: string;
+  images: Array<{
+    url: string;
+    publicId: string;
+    order: number;
+  }>;
+}
+
+export type PopulatedOffer = Omit<Offer, 'plants'> & {
+  plants: Plant[];
+};

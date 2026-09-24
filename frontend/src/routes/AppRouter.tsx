@@ -4,7 +4,8 @@ import { PublicLayout } from '@/components/layout/PublicLayout';
 import { AdminLayout } from '@/components/layout/AdminLayout';
 
 import HomePage from '@/pages/public/HomePage';
-import AboutPage from '@/pages/public/AboutPage';
+import OffersPage from '@/pages/public/OffersPage';
+import OfferDetailsPage from '@/pages/public/OfferDetailsPage';
 import CatalogPage from '@/pages/public/CatalogPage';
 import PlantDetailsPage from '@/pages/public/PlantDetailsPage';
 import GalleryPage from '@/pages/public/GalleryPage';
@@ -27,7 +28,8 @@ export function AppRouter() {
       {/* --- Public site (with Navbar/Footer/WhatsApp button) --- */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
+        <Route path="/offers" element={<OffersPage />} />
+        <Route path="/offers/:id" element={<OfferDetailsPage />} />
         <Route path="/plants" element={<CatalogPage />} />
         <Route path="/plants/:slug" element={<PlantDetailsPage />} />
         <Route path="/gallery" element={<GalleryPage />} />

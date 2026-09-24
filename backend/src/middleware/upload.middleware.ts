@@ -43,6 +43,9 @@ export const uploadSingleImage = upload.single('image');
 /** Single hero image field named "heroImage". */
 export const uploadSingleHeroImage = upload.single('heroImage');
 
+/** Single logo image field named "logo". */
+export const uploadSingleLogo = upload.single('logo');
+
 /** Multiple images under one field named "images". */
 export const uploadMultipleImages = upload.array(
   'images',

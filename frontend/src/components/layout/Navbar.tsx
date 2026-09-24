@@ -17,10 +17,11 @@ export function Navbar() {
   const { t, i18n } = useTranslation();
 
   const { data: content } = useFetch(fetchSiteContent, []);
+  const language = i18n.language.startsWith('ar') ? 'ar' : 'he';
 
   const NAV_LINKS = [
     { to: '/', label: t('nav.home') },
-    { to: '/about', label: t('nav.about') },
+    { to: '/offers', label: t('nav.offers') },
     { to: '/plants', label: t('nav.catalog') },
     { to: '/gallery', label: t('nav.gallery') },
     { to: '/services', label: t('nav.services') },
@@ -131,22 +132,17 @@ export function Navbar() {
               sm:text-lg
             "
           >
-            <img
-              src="https://scontent.cdninstagram.com/v/t51.2885-19/275404626_540804370599970_3247346516516391331_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=102&ccb=7-5&_nc_sid=f7ccc5&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=7pBNqPTKewkQ7kNvwF2rYbX&_nc_oc=Adq1WhueFYwuH0Fu4wrAf2djiBudhFi7VYshNFnnn43Z1JX6Pf8Ben9wGPYCToa2HNw&_nc_zt=24&_nc_ht=scontent.cdninstagram.com&_nc_ss=7b689&oh=00_AQLBajWL2ZBQ_uHqxZZDz__N1r3KHo6O25EMw8_jW5fCdw&oe=6AA672B9"
-              alt=""
-              aria-hidden="true"
-              className="
-                h-9
-                w-9
-                shrink-0
-                object-contain
-                sm:h-10
-                sm:w-10
-              "
-            />
+            {content?.logo?.url && (
+              <img
+                src={content.logo.url}
+                alt=""
+                aria-hidden="true"
+                className="h-9 w-9 shrink-0 object-contain sm:h-10 sm:w-10"
+              />
+            )}
 
             <span className="truncate">
-              {t('nav.brandName')}
+              {content?.siteName?.[language] ?? ''}
             </span>
           </NavLink>
 

@@ -3,6 +3,7 @@ import { SiteContent } from '../models';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ContentUpdateInput } from '../validators/content.validator';
 import { uploadImageBuffer, deleteCloudinaryImage } from '../utils/cloudinaryUpload';
+import { ApiError } from '../utils/ApiError';
 
 /**
  * GET /api/content
@@ -22,8 +23,7 @@ export const getSiteContent = asyncHandler(async (_req: Request, res: Response) 
 /**
  * PUT /api/content
  * Protected (admin). Updates the single SiteContent document. An optional
- * `heroImage` file replaces the existing hero image (old Cloudinary asset
- * is deleted first).
+ * `heroImage` file replaces the existing hero image.
  */
 export const updateSiteContent = asyncHandler(async (req: Request, res: Response) => {
   const input = req.body as ContentUpdateInput;
@@ -32,10 +32,20 @@ export const updateSiteContent = asyncHandler(async (req: Request, res: Response
   const content = await SiteContent.getSingleton();
 
   if (file) {
-    if (content.heroImage?.publicId) {
-      await deleteCloudinaryImage(content.heroImage.publicId);
+    const oldPublicId = content.heroImage?.publicId;
+    const newImage = await uploadImageBuffer(file.buffer, 'alyasmin/content');
+    content.heroImage = newImage;
+
+    try {
+      await content.save();
+    } catch (error) {
+      await deleteCloudinaryImage(newImage.publicId);
+      throw error;
     }
-    content.heroImage = await uploadImageBuffer(file.buffer, 'alyasmin/content');
+
+    if (oldPublicId) {
+      await deleteCloudinaryImage(oldPublicId);
+    }
   }
 
   Object.assign(content, input);
@@ -46,4 +56,44 @@ export const updateSiteContent = asyncHandler(async (req: Request, res: Response
     message: 'Site content updated successfully',
     data: content,
   });
+});
+
+export const uploadLogo = asyncHandler(async (req: Request, res: Response) => {
+  const file = req.file as Express.Multer.File | undefined;
+
+  if (!file) {
+    throw ApiError.badRequest('Logo image is required');
+  }
+
+  const content = await SiteContent.getSingleton();
+  const oldPublicId = content.logo?.publicId;
+  const newLogo = await uploadImageBuffer(file.buffer, 'alyasmin/content');
+  content.logo = newLogo;
+
+  try {
+    await content.save();
+  } catch (error) {
+    await deleteCloudinaryImage(newLogo.publicId);
+    throw error;
+  }
+
+  if (oldPublicId) {
+    await deleteCloudinaryImage(oldPublicId);
+  }
+
+  res.status(200).json({ success: true, data: content });
+});
+
+export const deleteLogo = asyncHandler(async (_req: Request, res: Response) => {
+  const content = await SiteContent.getSingleton();
+  const oldPublicId = content.logo?.publicId;
+
+  content.logo = undefined;
+  await content.save();
+
+  if (oldPublicId) {
+    await deleteCloudinaryImage(oldPublicId);
+  }
+
+  res.status(200).json({ success: true, data: content });
 });

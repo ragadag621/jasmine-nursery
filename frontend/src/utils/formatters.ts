@@ -36,7 +36,16 @@ export function formatSunlightNeed(sunlight: SunlightNeed): string {
 }
 
 export function formatWhatsAppLink(phone: string, message?: string): string {
-  const digitsOnly = phone.replace(/\D/g, '');
+  let digitsOnly = phone.replace(/\D/g, '');
+
+  if (digitsOnly.startsWith('00')) {
+    digitsOnly = digitsOnly.slice(2);
+  }
+
+  if (digitsOnly.startsWith('0')) {
+    digitsOnly = `972${digitsOnly.slice(1)}`;
+  }
+
   const text = message ? `?text=${encodeURIComponent(message)}` : '';
   return `https://wa.me/${digitsOnly}${text}`;
 }

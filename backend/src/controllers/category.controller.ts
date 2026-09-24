@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Category } from '../models';
+import { Category, Plant } from '../models';
 import { ApiError } from '../utils/ApiError';
 import { asyncHandler } from '../utils/asyncHandler';
 import {
@@ -181,6 +181,12 @@ export const deleteCategory = asyncHandler(async (req: Request, res: Response) =
 
   if (!category) {
     throw ApiError.notFound('Category not found');
+  }
+
+  if (await Plant.exists({ category: id })) {
+    throw ApiError.conflict(
+      'Cannot delete a category that is assigned to plants',
+    );
   }
 
   const publicId = category.image?.publicId;

@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useFetch } from '@/hooks/useFetch';
 import { fetchSiteContent } from '@/api/content.api';
 import { Hero } from '@/components/public/Hero';
-import { AboutPreview } from '@/components/public/AboutPreview';
 import { CategoryGrid } from '@/components/public/CategoryGrid';
 import { FeaturedPlants } from '@/components/public/FeaturedPlants';
 import { WhyChooseUs } from '@/components/public/WhyChooseUs';
@@ -21,19 +21,35 @@ import { OffersSection } from '@/components/public/OffersSection';
  * so no two adjacent sections share the same tone.
  */
 export default function HomePage() {
-  const { data: content } = useFetch(fetchSiteContent, []);
+  const { i18n } = useTranslation();
+
+  const {
+    data: content,
+    status: contentStatus,
+    refetch: refetchContent,
+  } = useFetch(fetchSiteContent, []);
 
   useEffect(() => {
-    setPageMeta('בית', 'משתלת אליאסמין - מגוון עצום של צמחים, פרחים, עצים ועציצים בג׳ת');
-  }, []);
+    if (!content) return;
+
+    const language = i18n.language.startsWith('ar') ? 'ar' : 'he';
+
+    setPageMeta(
+      content.siteName?.[language] ?? '',
+      content.heroSubtitle?.[language],
+    );
+  }, [content, i18n.language]);
 
   return (
     <main>
-      <Hero content={content} />
+      <Hero
+        content={content}
+        status={contentStatus}
+        onRetry={refetchContent}
+      />
       <CategoryGrid />
       <FeaturedPlants />
       <OffersSection />
-      <AboutPreview content={content} />
       <WhyChooseUs />
       <GalleryPreview />
       <ReviewsSection />
