@@ -47,6 +47,22 @@ export function Navbar() {
   }, [i18n]);
 
   useEffect(() => {
+    if (!content?.logo?.url) return;
+
+    let favicon = document.querySelector<HTMLLinkElement>(
+      'link[rel="icon"]'
+    );
+
+    if (!favicon) {
+      favicon = document.createElement('link');
+      favicon.rel = 'icon';
+      document.head.appendChild(favicon);
+    }
+
+    favicon.href = content.logo.url;
+  }, [content?.logo?.url]);
+
+  useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {

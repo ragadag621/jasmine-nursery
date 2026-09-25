@@ -1,32 +1,72 @@
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useFetch } from '@/hooks/useFetch';
-import { fetchOffers } from '@/api/offers.api';
+import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+import { useFetch } from "@/hooks/useFetch"
+import { fetchOffers } from "@/api/offers.api"
 
 export function OffersSection() {
-  const { i18n } = useTranslation();
-  const currentLanguage = i18n.language.startsWith('ar') ? 'ar' : 'he';
+  const { i18n } = useTranslation()
+  const currentLanguage = i18n.language.startsWith("ar") ? "ar" : "he"
 
-  const { data: offers, status } = useFetch(
-    () => fetchOffers(true),
-    []
-  );
+  const { data: offers, status } = useFetch(() => fetchOffers(true), [])
 
-  if (status === 'loading' || !offers || offers.length === 0) {
-    return null;
+  const [now, setNow] = useState(() => Date.now())
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setNow(Date.now())
+    }, 60_000)
+
+    return () => window.clearInterval(interval)
+  }, [])
+
+  if (status === "loading" || !offers || offers.length === 0) {
+    return null
   }
 
-  const isArabic = currentLanguage === 'ar';
+  const isArabic = currentLanguage === "ar"
 
   const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString(
-      isArabic ? 'ar-SA' : 'he-IL',
-      {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      }
-    );
+    new Date(date).toLocaleDateString("he-IL", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    })
+
+  const getRemainingTime = (endDate: string) => {
+    const end = new Date(endDate).getTime()
+    const difference = end - now
+
+    if (difference <= 0) {
+      return null
+    }
+
+    const totalMinutes = Math.floor(difference / (1000 * 60))
+    const totalHours = Math.floor(totalMinutes / 60)
+    const days = Math.floor(totalHours / 24)
+
+    if (days > 1) {
+      return isArabic
+        ? `متبقي ${days} أيام على انتهاء الحملة`
+        : `נותרו ${days} ימים לסיום המבצע`
+    }
+
+    if (days === 1) {
+      return isArabic
+        ? "متبقي يوم واحد على انتهاء الحملة"
+        : "נותר יום אחד לסיום המבצע"
+    }
+
+    if (totalHours >= 1) {
+      return isArabic
+        ? `متبقي ${totalHours} ساعات على انتهاء الحملة`
+        : `נותרו ${totalHours} שעות לסיום המבצע`
+    }
+
+    return isArabic
+      ? `متبقي ${Math.max(totalMinutes, 1)} دقيقة على انتهاء الحملة`
+      : `נותרו ${Math.max(totalMinutes, 1)} דקות לסיום המבצע`
+  }
 
   return (
     <section
@@ -115,7 +155,7 @@ export function OffersSection() {
                   text-[var(--color-terracotta-600)]
                 "
               >
-                {isArabic ? 'عروضنا' : 'המבצעים שלנו'}
+                {isArabic ? "عروضنا" : "המבצעים שלנו"}
               </p>
             </div>
 
@@ -131,8 +171,8 @@ export function OffersSection() {
               "
             >
               {isArabic
-                ? 'عروض مميزة لا تفوّت'
-                : 'מבצעים מיוחדים שלא כדאי לפספס'}
+                ? "عروض مميزة لا تفوّت"
+                : "מבצעים מיוחדים שלא כדאי לפספס"}
             </h2>
 
             <p
@@ -146,8 +186,8 @@ export function OffersSection() {
               "
             >
               {isArabic
-                ? 'اكتشفي عروضنا الحالية واختاري ما يناسبك من النباتات.'
-                : 'גלו את המבצעים העדכניים שלנו ובחרו את הצמחים שמתאימים לכם.'}
+                ? "اكتشفوا عروضنا الحالية واختاروا ما يناسبكم من النباتات."
+                : "גלו את המבצעים העדכניים שלנו ובחרו את הצמחים שמתאימים לכם."}
             </p>
           </div>
 
@@ -178,9 +218,7 @@ export function OffersSection() {
               sm:self-auto
             "
           >
-            <span>
-              {isArabic ? 'كل العروض' : 'כל המבצעים'}
-            </span>
+            <span>{isArabic ? "كل العروض" : "כל המבצעים"}</span>
 
             <span
               aria-hidden="true"
@@ -188,10 +226,9 @@ export function OffersSection() {
                 text-base
                 transition-transform
                 duration-200
-                group-hover:translate-x-0.5
               "
             >
-              {isArabic ? '←' : '→'}
+              {isArabic ? "←" : "→"}
             </span>
           </Link>
         </div>
@@ -207,15 +244,18 @@ export function OffersSection() {
           "
         >
           {offers.map((offer) => {
-            const title = offer.title[currentLanguage];
-            const description = offer.description[currentLanguage];
+            const title = offer.title[currentLanguage]
+            const description = offer.description[currentLanguage]
 
-            const hasPlants = offer.plants.length > 0;
+            const hasPlants = offer.plants.length > 0
+            const remainingTime = offer.endDate
+              ? getRemainingTime(offer.endDate)
+              : null
 
             return (
               <Link
                 key={offer._id}
-                to={hasPlants ? `/offers/${offer._id}` : '/offers'}
+                to={hasPlants ? `/offers/${offer._id}` : "/offers"}
                 aria-label={title}
                 className="
                   group
@@ -257,7 +297,6 @@ export function OffersSection() {
                       loading="lazy"
                     />
 
-                    {/* Image overlay */}
                     <div
                       aria-hidden="true"
                       className="
@@ -271,7 +310,6 @@ export function OffersSection() {
                       "
                     />
 
-                    {/* Offer badge */}
                     <span
                       className="
                         absolute
@@ -288,7 +326,7 @@ export function OffersSection() {
                         backdrop-blur-sm
                       "
                     >
-                      {isArabic ? 'عرض مميز' : 'מבצע מיוחד'}
+                      {isArabic ? "عرض مميز" : "מבצע מיוחד"}
                     </span>
                   </div>
                 ) : (
@@ -329,7 +367,7 @@ export function OffersSection() {
                         shadow-sm
                       "
                     >
-                      {isArabic ? 'عرض مميز' : 'מבצע מיוחד'}
+                      {isArabic ? "عرض مميز" : "מבצע מיוחד"}
                     </span>
                   </div>
                 )}
@@ -371,7 +409,7 @@ export function OffersSection() {
                         group-hover:text-white
                       "
                     >
-                      {isArabic ? '←' : '→'}
+                      {isArabic ? "←" : "→"}
                     </span>
                   </div>
 
@@ -387,11 +425,45 @@ export function OffersSection() {
                     {description}
                   </p>
 
+                  {/* Campaign countdown */}
+                  {remainingTime && (
+                    <div
+                      className="
+                        mt-5
+                        flex
+                        items-center
+                        gap-2
+                        rounded-xl
+                        border
+                        border-red-100
+                        bg-red-50
+                        px-3.5
+                        py-2.5
+                        text-xs
+                        font-semibold
+                        text-red-600
+                      "
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="
+                          h-2
+                          w-2
+                          shrink-0
+                          rounded-full
+                          bg-red-500
+                        "
+                      />
+
+                      <span>{remainingTime}</span>
+                    </div>
+                  )}
+
                   {/* Dates */}
                   {(offer.startDate || offer.endDate) && (
                     <div
                       className="
-                        mt-5
+                        mt-4
                         border-t
                         border-[var(--color-sage-100)]
                         pt-4
@@ -451,11 +523,11 @@ export function OffersSection() {
                     <span>
                       {hasPlants
                         ? isArabic
-                          ? 'اكتشفي النباتات'
-                          : 'לצפייה בצמחים'
+                          ? "اكتشفوا النباتات"
+                          : "לצפייה בצמחים"
                         : isArabic
-                          ? 'اكتشفي العرض'
-                          : 'לצפייה במבצע'}
+                          ? "اكتشفوا العرض"
+                          : "לצפייה במבצע"}
                     </span>
 
                     <span
@@ -467,15 +539,15 @@ export function OffersSection() {
                         rtl:group-hover:-translate-x-1
                       "
                     >
-                      {isArabic ? '←' : '→'}
+                      {isArabic ? "←" : "→"}
                     </span>
                   </div>
                 </div>
               </Link>
-            );
+            )
           })}
         </div>
       </div>
     </section>
-  );
+  )
 }

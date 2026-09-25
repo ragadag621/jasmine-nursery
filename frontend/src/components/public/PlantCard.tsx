@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +15,17 @@ export function PlantCard({ plant }: PlantCardProps) {
   const { t, i18n } = useTranslation();
 
   const key = i18n.language === 'ar' ? 'ar' : 'he';
+  const isArabic = key === 'ar';
+
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setNow(Date.now());
+    }, 60_000);
+
+    return () => window.clearInterval(interval);
+  }, []);
 
   const image =
     plant.images[0]?.url ||
@@ -22,17 +34,75 @@ export function PlantCard({ plant }: PlantCardProps) {
   const isOfferActive = (() => {
     if (!plant.offer?.enabled || plant.offer.price == null) return false;
 
-    const now = new Date();
-    const startDate = plant.offer.startDate ? new Date(plant.offer.startDate) : null;
-    const endDate = plant.offer.endDate ? new Date(plant.offer.endDate) : null;
+    const currentTime = new Date(now);
+    const startDate = plant.offer.startDate
+      ? new Date(plant.offer.startDate)
+      : null;
+    const endDate = plant.offer.endDate
+      ? new Date(plant.offer.endDate)
+      : null;
 
-    if (startDate && startDate > now) return false;
-    if (endDate && endDate < now) return false;
+    if (startDate && startDate > currentTime) return false;
+    if (endDate && endDate < currentTime) return false;
 
     return true;
   })();
 
   const currentPrice = isOfferActive ? plant.offer?.price : null;
+
+  const getRemainingTime = (endDate?: string) => {
+    if (!endDate || !isOfferActive) return null;
+
+    const end = new Date(endDate).getTime();
+    const difference = end - now;
+
+    if (difference <= 0) return null;
+
+    const totalMinutes = Math.floor(difference / (1000 * 60));
+    const totalHours = Math.floor(totalMinutes / 60);
+    const days = Math.floor(totalHours / 24);
+
+    if (days > 1) {
+      return isArabic
+        ? `متبقي ${days} أيام على انتهاء الحملة`
+        : `נותרו ${days} ימים לסיום המבצע`;
+    }
+
+    if (days === 1) {
+      return isArabic
+        ? 'متبقي يوم واحد على انتهاء الحملة'
+        : 'נותר יום אחד לסיום המבצע';
+    }
+
+    if (totalHours >= 1) {
+      return isArabic
+        ? `متبقي ${totalHours} ساعات على انتهاء الحملة`
+        : `נותרו ${totalHours} שעות לסיום המבצע`;
+    }
+
+    return isArabic
+      ? `متبقي ${Math.max(totalMinutes, 1)} دقيقة على انتهاء الحملة`
+      : `נותרו ${Math.max(totalMinutes, 1)} דקות לסיום המבצע`;
+  };
+
+  const formatDate = (date?: string) => {
+    if (!date) return '';
+
+    return new Date(date).toLocaleDateString('he-IL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
+
+  const remainingTime = isOfferActive
+    ? getRemainingTime(plant.offer?.endDate)
+    : null;
+
+  const offerEndDate =
+    isOfferActive && plant.offer?.endDate
+      ? formatDate(plant.offer.endDate)
+      : null;
 
   const availabilityVariant =
     plant.availability === 'in_stock'
@@ -54,7 +124,9 @@ export function PlantCard({ plant }: PlantCardProps) {
       : t('plant.priceOnRequest');
 
   const discountedPrice =
-    currentPrice != null ? `₪${currentPrice.toLocaleString('he-IL')}` : null;
+    currentPrice != null
+      ? `₪${currentPrice.toLocaleString('he-IL')}`
+      : null;
 
   return (
     <Link
@@ -159,6 +231,7 @@ export function PlantCard({ plant }: PlantCardProps) {
                 <span className="text-xs text-[var(--color-ink-500)] line-through">
                   {price}
                 </span>
+
                 <span className="font-display text-base text-[var(--color-forest-700)] sm:text-lg">
                   {discountedPrice}
                 </span>
@@ -171,6 +244,62 @@ export function PlantCard({ plant }: PlantCardProps) {
               </span>
             )}
           </div>
+
+          {/* Campaign countdown */}
+          {remainingTime && (
+            <div
+              className="
+                mt-4
+                flex
+                items-center
+                gap-2
+                rounded-xl
+                border
+                border-red-100
+                bg-red-50
+                px-3
+                py-2.5
+                text-xs
+                font-semibold
+                text-red-600
+              "
+              dir="rtl"
+            >
+              <span
+                aria-hidden="true"
+                className="
+                  h-2
+                  w-2
+                  shrink-0
+                  rounded-full
+                  bg-red-500
+                "
+              />
+
+              <span>{remainingTime}</span>
+            </div>
+          )}
+
+          {/* Campaign end date */}
+          {offerEndDate && (
+            <div
+              className="
+                mt-3
+                border-t
+                border-[var(--color-sage-100)]
+                pt-3
+                text-xs
+                text-[var(--color-ink-500)]
+              "
+              dir="rtl"
+            >
+              <span>
+                {isArabic
+                  ? `ينتهي العرض في ${offerEndDate}`
+                  : `המבצע מסתיים בתאריך ${offerEndDate}`}
+              </span>
+            </div>
+          )}
         </div>
       </Card>
     </Link>
